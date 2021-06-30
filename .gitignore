@@ -21,3 +21,4 @@ build/debug/osp/q3history
 build/debug/baseq3/q3history
 *.log
 *.stash
+*.pid

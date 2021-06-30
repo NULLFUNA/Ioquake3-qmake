@@ -576,8 +576,8 @@ vm_t *VM_Create( const char *module, intptr_t (*systemCalls)(intptr_t *),
 	if(!null_use_virtualmachine->integer) {
 
 		//	FIND DYNAMIC LIBRARY
-		const char* pchModulename = va(LIB_PREFIX "%s", module);
-		retval = FS_FindVM(&startSearch, filename, sizeof(filename), pchModulename, 1);
+		retval = FS_FindVM(&startSearch, filename, sizeof(filename), module, 1);
+
 		if(retval != VMI_NATIVE) {
 			Com_Error(ERR_FATAL, "Failed to load module: %s\nNOTE: Virtual machine disabled!\n", module);
 			return NULL;
