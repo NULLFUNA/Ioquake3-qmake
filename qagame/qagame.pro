@@ -15,9 +15,6 @@ unix {
 }
 !isEmpty(target.path): INSTALLS += target
 
-QMAKE_CC = g++
-QMAKE_CXX = g++
-
 DESTDIR = ./../debug/baseq3/
 
 HEADERS += \
