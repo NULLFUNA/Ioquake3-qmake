@@ -170,6 +170,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #if defined(__linux__)
 #define OS_STRING "linux"
+#define ARCH_STRING "x86_64"
 #elif defined(__FreeBSD_kernel__)
 #define OS_STRING "kFreeBSD"
 #else
