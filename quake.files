@@ -718,6 +718,8 @@ code/qcommon/huffman.c
 code/qcommon/ioapi.c
 code/qcommon/ioapi.h
 code/qcommon/json.h
+code/qcommon/libload.c
+code/qcommon/libload.h
 code/qcommon/md4.c
 code/qcommon/md5.c
 code/qcommon/msg.c

@@ -1,6 +1,7 @@
 
 *.dll
 *.o
+*.user
 build/cgame/Makefile.Release
 build/cgame/Makefile.Debug
 *.Debug

@@ -1,6 +1,6 @@
 The project is divided into two parts.
 
-Part 1 containsin the quake.creator file:
+Part 1 contains in the quake.creator file:
  - Compiles ioquake3, ioq3ded and render libraries
 
 Part 2 contains in the quake.pro file:

@@ -170,7 +170,7 @@ Makefile: ../../qagame/qagame.pro ../../../../Qt/6.1.1/mingw81_64/mkspecs/win32-
 		../../../../Qt/6.1.1/mingw81_64/mkspecs/features/qt_config.prf \
 		../../../../Qt/6.1.1/mingw81_64/mkspecs/win32-g++/qmake.conf \
 		../../../../Qt/6.1.1/mingw81_64/mkspecs/features/spec_post.prf \
-		../.qmake.stash \
+		.qmake.stash \
 		../../../../Qt/6.1.1/mingw81_64/mkspecs/features/exclusive_builds.prf \
 		../../../../Qt/6.1.1/mingw81_64/mkspecs/features/toolchain.prf \
 		../../../../Qt/6.1.1/mingw81_64/mkspecs/features/default_pre.prf \
@@ -297,7 +297,7 @@ Makefile: ../../qagame/qagame.pro ../../../../Qt/6.1.1/mingw81_64/mkspecs/win32-
 ../../../../Qt/6.1.1/mingw81_64/mkspecs/features/qt_config.prf:
 ../../../../Qt/6.1.1/mingw81_64/mkspecs/win32-g++/qmake.conf:
 ../../../../Qt/6.1.1/mingw81_64/mkspecs/features/spec_post.prf:
-../.qmake.stash:
+.qmake.stash:
 ../../../../Qt/6.1.1/mingw81_64/mkspecs/features/exclusive_builds.prf:
 ../../../../Qt/6.1.1/mingw81_64/mkspecs/features/toolchain.prf:
 ../../../../Qt/6.1.1/mingw81_64/mkspecs/features/default_pre.prf:
@@ -333,7 +333,7 @@ all: debug-all release-all  FORCE
 clean: debug-clean release-clean  FORCE
 distclean: debug-distclean release-distclean  FORCE
 	-$(DEL_FILE) Makefile
-	-$(DEL_FILE) ../debug/baseq3/libqagame.a
+	-$(DEL_FILE) .qmake.stash ../debug/baseq3/libqagame.a
 
 debug-mocclean:
 	$(MAKE) -f $(MAKEFILE).Debug mocclean

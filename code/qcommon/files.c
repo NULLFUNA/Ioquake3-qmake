@@ -1448,6 +1448,7 @@ int FS_FindVM(void **startSearch, char *found, int foundlen, const char *name, i
 	searchpath_t *search, *lastSearch;
 	directory_t *dir;
 	pack_t *pack;
+
 	char dllName[MAX_OSPATH], qvmName[MAX_OSPATH];
 	char *netpath;
 
