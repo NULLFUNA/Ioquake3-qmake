@@ -22,3 +22,5 @@ build/debug/baseq3/q3history
 *.log
 *.stash
 *.pid
+*.user
+quake.creator.user

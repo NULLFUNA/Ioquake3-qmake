@@ -535,7 +535,7 @@ If image ends in .qvm it will be interpreted, otherwise
 it will attempt to load as a system dll
 ================
 */
-vm_t *VM_Create( const char *module, intptr_t (*systemCalls)(intptr_t *), 
+vm_t *VM_Create( const char *module, intptr_t (*systemCalls)(intptr_t *),
 				vmInterpret_t interpret ) {
 	vm_t		*vm;
 	vmHeader_t	*header;
@@ -572,45 +572,44 @@ vm_t *VM_Create( const char *module, intptr_t (*systemCalls)(intptr_t *),
 
 	Q_strncpyz(vm->name, module, sizeof(vm->name));
 
+
+
 	//	WCL: DISABLE FUCKIN VIRTUAL MACHINE
 	if(!null_use_virtualmachine->integer) {
 
+		const char* pchWorkingDir = Sys_DefaultInstallPath();
+		const char* pchModulePath = va("%s\\baseq3\\%s" DLL_EXT, pchWorkingDir, module);
 		//	FIND DYNAMIC LIBRARY
-		retval = FS_FindVM(&startSearch, filename, sizeof(filename), module, 1);
-
-		if(retval != VMI_NATIVE) {
-			Com_Error(ERR_FATAL, "Failed to load module: %s\nNOTE: Virtual machine disabled!\n", module);
-			return NULL;
-		}
-
-		vm->dllHandle = Sys_LoadGameDll(filename, &vm->entryPoint, VM_DllSyscall);
+		vm->dllHandle = Sys_LoadGameDll(pchModulePath, &vm->entryPoint, VM_DllSyscall);
 
 		if(vm->dllHandle) {
 			vm->systemCall = systemCalls;
 			return vm;
 		} else {
-			Com_Error(ERR_FATAL, "Failed to load module: %s\nNOTE: Virtual machine disabled!\n", module);
+			Com_Error(ERR_FATAL, "Failed to load module:\n%s\n", pchModulePath);
 			return NULL;
 		}
 
 	}
 
+
+
 	do
 	{
 		retval = FS_FindVM(&startSearch, filename, sizeof(filename), module, (interpret == VMI_NATIVE));
-		
+
 		if(retval == VMI_NATIVE)
 		{
 			Com_Printf("Try loading dll file %s\n", filename);
 
 			vm->dllHandle = Sys_LoadGameDll(filename, &vm->entryPoint, VM_DllSyscall);
-			
+
 			if(vm->dllHandle)
 			{
 				vm->systemCall = systemCalls;
 				return vm;
 			}
-			
+
 			Com_Printf("Failed loading dll, trying next\n");
 		}
 		else if(retval == VMI_COMPILED)
@@ -623,7 +622,7 @@ vm_t *VM_Create( const char *module, intptr_t (*systemCalls)(intptr_t *),
 			Q_strncpyz(vm->name, module, sizeof(vm->name));
 		}
 	} while(retval >= 0);
-	
+
 	if(retval < 0)
 		return NULL;
 
@@ -638,11 +637,18 @@ vm_t *VM_Create( const char *module, intptr_t (*systemCalls)(intptr_t *),
 
 	vm->compiled = qfalse;
 
+#ifdef NO_VM_COMPILED
+	if(interpret >= VMI_COMPILED) {
+		Com_Printf("Architecture doesn't have a bytecode compiler, using interpreter\n");
+		interpret = VMI_BYTECODE;
+	}
+#else
 	if(interpret != VMI_BYTECODE)
 	{
 		vm->compiled = qtrue;
 		VM_Compile( vm, header );
 	}
+#endif
 	// VM_Compile may have reset vm->compiled if compilation failed
 	if (!vm->compiled)
 	{
