@@ -41,7 +41,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   #define CINEMATICS_INTRO		"intro.roq"
 //  #define LEGACY_PROTOCOL	// You probably don't need this for your standalone game
 #else
-  #define PRODUCT_NAME				"ioquake3 + QT Creator"
+  #define PRODUCT_NAME				"ioq3"
   #define BASEGAME					"baseq3"
   #define CLIENT_WINDOW_TITLE		"ioquake3"
   #define CLIENT_WINDOW_MIN_TITLE	"ioq3"
@@ -75,7 +75,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #  define PRODUCT_DATE __DATE__
 #endif
 
-#define Q3_VERSION "ioquake3 1.36 + QT Creator"
+#define Q3_VERSION PRODUCT_NAME " " PRODUCT_VERSION
 
 #define MAX_TEAMNAME		32
 #define MAX_MASTER_SERVERS      5	// number of supported master servers
@@ -198,10 +198,7 @@ typedef int intptr_t;
 
 typedef unsigned char 		byte;
 
-//typedef enum {qfalse, qtrue}	qboolean;
-typedef int qboolean;
-#define qtrue	1
-#define qfalse	0
+typedef enum {qfalse, qtrue}	qboolean;
 
 typedef union {
 	float f;

@@ -216,7 +216,6 @@ Makefile: ../quake-modules.pro ../../../Qt/6.1.1/mingw81_64/mkspecs/win32-g++/qm
 		../../../Qt/6.1.1/mingw81_64/mkspecs/features/qt_config.prf \
 		../../../Qt/6.1.1/mingw81_64/mkspecs/win32-g++/qmake.conf \
 		../../../Qt/6.1.1/mingw81_64/mkspecs/features/spec_post.prf \
-		.qmake.stash \
 		../../../Qt/6.1.1/mingw81_64/mkspecs/features/exclusive_builds.prf \
 		../../../Qt/6.1.1/mingw81_64/mkspecs/features/toolchain.prf \
 		../../../Qt/6.1.1/mingw81_64/mkspecs/features/default_pre.prf \
@@ -337,7 +336,6 @@ Makefile: ../quake-modules.pro ../../../Qt/6.1.1/mingw81_64/mkspecs/win32-g++/qm
 ../../../Qt/6.1.1/mingw81_64/mkspecs/features/qt_config.prf:
 ../../../Qt/6.1.1/mingw81_64/mkspecs/win32-g++/qmake.conf:
 ../../../Qt/6.1.1/mingw81_64/mkspecs/features/spec_post.prf:
-.qmake.stash:
 ../../../Qt/6.1.1/mingw81_64/mkspecs/features/exclusive_builds.prf:
 ../../../Qt/6.1.1/mingw81_64/mkspecs/features/toolchain.prf:
 ../../../Qt/6.1.1/mingw81_64/mkspecs/features/default_pre.prf:

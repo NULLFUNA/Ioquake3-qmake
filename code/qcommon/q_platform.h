@@ -103,6 +103,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define ARCH_STRING "AXP"
 #endif
 
+#define LIB_PREFIX ""
+
 #define Q3_LITTLE_ENDIAN
 
 #define DLL_EXT ".dll"
@@ -176,6 +178,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #else
 #define OS_STRING "GNU"
 #endif
+
+#define LIB_PREFIX "lib"
 
 #define ID_INLINE inline
 
