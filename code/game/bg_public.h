@@ -630,7 +630,7 @@ typedef struct gitem_s {
 	int			giTag;
 
 	const char		*precaches;		// string of all models and images this item will use
-	const char		*sounds;		// string of all sounds this item will use
+	char			*sounds;		// string of all sounds this item will use
 } gitem_t;
 
 // included in both the game dll and the client

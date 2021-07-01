@@ -25,3 +25,7 @@ build/debug/baseq3/q3history
 *.user
 quake.creator.user
 build/debug/qkey
+build/ui/Makefile
+build/cgame/Makefile
+build/Makefile
+build/qagame/Makefile
