@@ -196,7 +196,7 @@ typedef int intptr_t;
 
 //=============================================================
 
-typedef unsigned char 		byte;
+typedef unsigned char byte;
 
 typedef int	qboolean;
 #define qtrue	1

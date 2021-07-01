@@ -197,7 +197,7 @@ void QDECL Com_Printf( const char *fmt, ... ) {
     // TTimo: only open the qconsole.log if the filesystem is in an initialized state
     //   also, avoid recursing in the qconsole.log opening (i.e. if fs_debug is on)
 		if ( !logfile && FS_Initialized() && !opening_qconsole) {
-			struct tm *newtime;
+            struct tm *newtime;
 			time_t aclock;
 
       opening_qconsole = qtrue;
@@ -382,8 +382,8 @@ void Com_Quit_f( void ) {
 		// Sys_Quit will kill this process anyways, so
 		// a corrupt call stack makes no difference
 		VM_Forced_Unload_Start();
-		SV_Shutdown(p[0] ? p : "Server quit");
-		CL_Shutdown(p[0] ? p : "Client quit", qtrue, qtrue);
+        SV_Shutdown(p[0] ? p : (char*) "Server quit");
+        CL_Shutdown(p[0] ? p : (char*) "Client quit", qtrue, qtrue);
 		VM_Forced_Unload_Done();
 		Com_Shutdown ();
 		FS_Shutdown(qtrue);
@@ -951,7 +951,7 @@ void *Z_TagMallocDebug( int size, int tag, char *label, char *file, int line ) {
 void *Z_TagMalloc( int size, int tag ) {
 #endif
 	int		extra;
-	memblock_t	*start, *rover, *new, *base;
+    memblock_t	*start, *rover, *New, *base;
 	memzone_t *zone;
 
 	if (!tag) {
@@ -1006,14 +1006,14 @@ void *Z_TagMalloc( int size, int tag ) {
 	extra = base->size - size;
 	if (extra > MINFRAGMENT) {
 		// there will be a free fragment after the allocated block
-		new = (memblock_t *) ((byte *)base + size );
-		new->size = extra;
-		new->tag = 0;			// free block
-		new->prev = base;
-		new->id = ZONEID;
-		new->next = base->next;
-		new->next->prev = new;
-		base->next = new;
+        New = (memblock_t *) ((byte *)base + size );
+        New->size = extra;
+        New->tag = 0;			// free block
+        New->prev = base;
+        New->id = ZONEID;
+        New->next = base->next;
+        New->next->prev = New;
+        base->next = New;
 		base->size = size;
 	}
 	
@@ -1422,7 +1422,7 @@ Com_InitZoneMemory
 */
 void Com_InitSmallZoneMemory( void ) {
 	s_smallZoneTotal = 512 * 1024;
-	smallzone = calloc( s_smallZoneTotal, 1 );
+    smallzone = (memzone_t*) calloc( s_smallZoneTotal, 1 );
 	if ( !smallzone ) {
 		Com_Error( ERR_FATAL, "Small zone data failed to allocate %1.1f megs", (float)s_smallZoneTotal / (1024*1024) );
 	}
@@ -1447,7 +1447,7 @@ void Com_InitZoneMemory( void ) {
 		s_zoneTotal = cv->integer * 1024 * 1024;
 	}
 
-	mainzone = calloc( s_zoneTotal, 1 );
+    mainzone = (memzone_t*)calloc( s_zoneTotal, 1 );
 	if ( !mainzone ) {
 		Com_Error( ERR_FATAL, "Zone data failed to allocate %i megs", s_zoneTotal / (1024*1024) );
 	}
@@ -1795,7 +1795,7 @@ void *Hunk_AllocateTempMemory( int size ) {
 	// memory systems
 	if ( s_hunkData == NULL )
 	{
-		return Z_Malloc(size);
+        return Z_Malloc(size);
 	}
 
 	Hunk_SwapBanks();
