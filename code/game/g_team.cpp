@@ -40,16 +40,18 @@ teamgame_t teamgame;
 
 gentity_t	*neutralObelisk;
 
-void Team_SetFlagStatus( int team, flagStatus_t status );
+void Team_SetFlagStatus( team_t team, flagStatus_t status );
 
 void Team_InitGame( void ) {
 	memset(&teamgame, 0, sizeof teamgame);
 
 	switch( g_gametype.integer ) {
 	case GT_CTF:
-		teamgame.redStatus = -1; // Invalid to force update
+
+		teamgame.redStatus = FLAG_INVALID; // Invalid to force update
 		Team_SetFlagStatus( TEAM_RED, FLAG_ATBASE );
-		 teamgame.blueStatus = -1; // Invalid to force update
+
+		teamgame.blueStatus = FLAG_INVALID; // Invalid to force update
 		Team_SetFlagStatus( TEAM_BLUE, FLAG_ATBASE );
 		break;
 	default:
@@ -176,7 +178,7 @@ qboolean OnSameTeam( gentity_t *ent1, gentity_t *ent2 ) {
 static char ctfFlagStatusRemap[] = { '0', '1', '*', '*', '2' };
 static char oneFlagStatusRemap[] = { '0', '1', '2', '3', '4' };
 
-void Team_SetFlagStatus( int team, flagStatus_t status ) {
+void Team_SetFlagStatus( team_t team, flagStatus_t status ) {
 	qboolean modified = qfalse;
 
 	switch( team ) {
@@ -199,6 +201,8 @@ void Team_SetFlagStatus( int team, flagStatus_t status ) {
 			teamgame.flagStatus = status;
 			modified = qtrue;
 		}
+		break;
+	default:	//	WCL: fix warnings
 		break;
 	}
 
@@ -481,12 +485,6 @@ void Team_CheckHurtCarrier(gentity_t *targ, gentity_t *attacker)
 	else
 		flag_pw = PW_REDFLAG;
 
-#ifdef MISSIONPACK
-	if (g_gametype.integer == GT_1FCTF) {
-		flag_pw = PW_NEUTRALFLAG;
-	}
-#endif
-
 	// flags
 	if (targ->client->ps.powerups[flag_pw] &&
 		targ->client->sess.sessionTeam != attacker->client->sess.sessionTeam)
@@ -499,7 +497,7 @@ void Team_CheckHurtCarrier(gentity_t *targ, gentity_t *attacker)
 }
 
 
-gentity_t *Team_ResetFlag( int team ) {
+gentity_t *Team_ResetFlag( team_t team ) {
 	char *c;
 	gentity_t *ent, *rent = NULL;
 
@@ -619,7 +617,7 @@ void Team_CaptureFlagSound( gentity_t *ent, int team ) {
 }
 
 void Team_ReturnFlag( int team ) {
-	Team_ReturnFlagSound(Team_ResetFlag(team), team);
+	Team_ReturnFlagSound(Team_ResetFlag((team_t)team), team);
 	if( team == TEAM_FREE ) {
 		PrintMsg(NULL, "The flag has returned!\n" );
 	}
@@ -662,7 +660,7 @@ void Team_DroppedFlagThink(gentity_t *ent) {
 		team = TEAM_FREE;
 	}
 
-	Team_ReturnFlagSound( Team_ResetFlag( team ), team );
+	Team_ReturnFlagSound( Team_ResetFlag( (team_t)team ), team );
 	// Reset Flag will delete this entity
 }
 
@@ -678,12 +676,6 @@ int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, int team ) {
 	gclient_t	*cl = other->client;
 	int			enemy_flag;
 
-#ifdef MISSIONPACK
-	if( g_gametype.integer == GT_1FCTF ) {
-		enemy_flag = PW_NEUTRALFLAG;
-	}
-	else {
-#endif
 	if (cl->sess.sessionTeam == TEAM_RED) {
 		enemy_flag = PW_BLUEFLAG;
 	} else {
@@ -698,27 +690,17 @@ int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, int team ) {
 		other->client->pers.teamState.flagrecovery++;
 		other->client->pers.teamState.lastreturnedflag = level.time;
 		//ResetFlag will remove this entity!  We must return zero
-		Team_ReturnFlagSound(Team_ResetFlag(team), team);
+		Team_ReturnFlagSound(Team_ResetFlag((team_t)team), team);
 		return 0;
 	}
-#ifdef MISSIONPACK
-	}
-#endif
+
 
 	// the flag is at home base.  if the player has the enemy
 	// flag, he's just won!
 	if (!cl->ps.powerups[enemy_flag])
 		return 0; // We don't have the flag
-#ifdef MISSIONPACK
-	if( g_gametype.integer == GT_1FCTF ) {
-		PrintMsg( NULL, "%s" S_COLOR_WHITE " captured the flag!\n", cl->pers.netname );
-	}
-	else {
-#endif
+
 	PrintMsg( NULL, "%s" S_COLOR_WHITE " captured the %s flag!\n", cl->pers.netname, TeamName(OtherTeam(team)));
-#ifdef MISSIONPACK
-	}
-#endif
 
 	cl->ps.powerups[enemy_flag] = 0;
 
@@ -792,21 +774,6 @@ int Team_TouchOurFlag( gentity_t *ent, gentity_t *other, int team ) {
 int Team_TouchEnemyFlag( gentity_t *ent, gentity_t *other, int team ) {
 	gclient_t *cl = other->client;
 
-#ifdef MISSIONPACK
-	if( g_gametype.integer == GT_1FCTF ) {
-		PrintMsg (NULL, "%s" S_COLOR_WHITE " got the flag!\n", other->client->pers.netname );
-
-		cl->ps.powerups[PW_NEUTRALFLAG] = INT_MAX; // flags never expire
-
-		if( team == TEAM_RED ) {
-			Team_SetFlagStatus( TEAM_FREE, FLAG_TAKEN_RED );
-		}
-		else {
-			Team_SetFlagStatus( TEAM_FREE, FLAG_TAKEN_BLUE );
-		}
-	}
-	else{
-#endif
 		PrintMsg (NULL, "%s" S_COLOR_WHITE " got the %s flag!\n",
 			other->client->pers.netname, TeamName(team));
 
@@ -815,12 +782,8 @@ int Team_TouchEnemyFlag( gentity_t *ent, gentity_t *other, int team ) {
 		else
 			cl->ps.powerups[PW_BLUEFLAG] = INT_MAX; // flags never expire
 
-		Team_SetFlagStatus( team, FLAG_TAKEN );
-#ifdef MISSIONPACK
-	}
+		Team_SetFlagStatus( (team_t)team, FLAG_TAKEN );
 
-	AddScore(other, ent->r.currentOrigin, CTF_FLAG_BONUS);
-#endif
 	cl->pers.teamState.flagsince = level.time;
 	Team_TakeFlagSound( ent, team );
 

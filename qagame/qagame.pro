@@ -40,36 +40,36 @@ HEADERS += \
     ../code/qcommon/q_shared.h
 
 SOURCES += \
+    ../code/game/g_main.cpp \
     ../code/qcommon/q_math.c \
     ../code/qcommon/q_shared.c \
-    ../code/game/ai_chat.c \
-    ../code/game/ai_cmd.c \
-    ../code/game/ai_dmnet.c \
-    ../code/game/ai_dmq3.c \
-    ../code/game/ai_main.c \
-    ../code/game/ai_team.c \
-    ../code/game/ai_vcmd.c \
-    ../code/game/bg_misc.c \
-    ../code/game/bg_pmove.c \
-    ../code/game/bg_slidemove.c \
-    ../code/game/g_active.c \
-    ../code/game/g_arenas.c \
-    ../code/game/g_bot.c \
-    ../code/game/g_client.c \
-    ../code/game/g_cmds.c \
-    ../code/game/g_combat.c \
-    ../code/game/g_items.c \
-    ../code/game/g_main.c \
-    ../code/game/g_mem.c \
-    ../code/game/g_misc.c \
-    ../code/game/g_missile.c \
-    ../code/game/g_mover.c \
-    ../code/game/g_session.c \
-    ../code/game/g_spawn.c \
-    ../code/game/g_svcmds.c \
-    ../code/game/g_syscalls.c \
-    ../code/game/g_target.c \
-    ../code/game/g_team.c \
-    ../code/game/g_trigger.c \
-    ../code/game/g_utils.c \
-    ../code/game/g_weapon.c
+    ../code/game/ai_chat.cpp \
+    ../code/game/ai_cmd.cpp \
+    ../code/game/ai_dmnet.cpp \
+    ../code/game/ai_dmq3.cpp \
+    ../code/game/ai_main.cpp \
+    ../code/game/ai_team.cpp \
+    ../code/game/ai_vcmd.cpp \
+    ../code/game/bg_misc.cpp \
+    ../code/game/bg_pmove.cpp \
+    ../code/game/bg_slidemove.cpp \
+    ../code/game/g_active.cpp \
+    ../code/game/g_arenas.cpp \
+    ../code/game/g_bot.cpp \
+    ../code/game/g_client.cpp \
+    ../code/game/g_cmds.cpp \
+    ../code/game/g_combat.cpp \
+    ../code/game/g_items.cpp \
+    ../code/game/g_mem.cpp \
+    ../code/game/g_misc.cpp \
+    ../code/game/g_missile.cpp \
+    ../code/game/g_mover.cpp \
+    ../code/game/g_session.cpp \
+    ../code/game/g_spawn.cpp \
+    ../code/game/g_svcmds.cpp \
+    ../code/game/g_syscalls.cpp \
+    ../code/game/g_target.cpp \
+    ../code/game/g_team.cpp \
+    ../code/game/g_trigger.cpp \
+    ../code/game/g_utils.cpp \
+    ../code/game/g_weapon.cpp
