@@ -23,6 +23,6 @@ From there the quake executable can be launched
    - [ ] C++ `main ioquake`
    - [ ] C++ `lib renderer`
    - [X] C++ `lib qagame`
-   - [ ] C++ `lib cgame`
+   - [X] C++ `lib cgame`
    - [ ] C++ `lib ui`
 - [ ] Implement QTCore into project
