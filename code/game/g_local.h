@@ -79,7 +79,7 @@ struct gentity_s {
 
 	qboolean	inuse;
 
-	char		*classname;			// set in QuakeEd
+	const char	*classname;			// set in QuakeEd
 	int			spawnflags;			// set in QuakeEd
 
 	qboolean	neverFree;			// if true, FreeEntity will only unlink
@@ -114,7 +114,7 @@ struct gentity_s {
 	gentity_t	*prevTrain;
 	vec3_t		pos1, pos2;
 
-	char		*message;
+	const char	*message;
 
 	int			timestamp;		// body queue sinking, etc
 
@@ -158,11 +158,6 @@ struct gentity_s {
 	gentity_t	*activator;
 	gentity_t	*teamchain;		// next entity in team
 	gentity_t	*teammaster;	// master of the team
-
-#ifdef MISSIONPACK
-	int			kamikazeTime;
-	int			kamikazeShockTime;
-#endif
 
 	int			watertype;
 	int			waterlevel;

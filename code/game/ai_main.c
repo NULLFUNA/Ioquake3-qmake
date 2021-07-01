@@ -1174,7 +1174,7 @@ int BotAISetupClient(int client, struct bot_settings_s *settings, qboolean resta
 	bot_state_t *bs;
 	int errnum;
 
-	if (!botstates[client]) botstates[client] = G_Alloc(sizeof(bot_state_t));
+	if (!botstates[client]) botstates[client] = (bot_state_t*)G_Alloc(sizeof(bot_state_t));
 	bs = botstates[client];
 
 	if (!bs) {

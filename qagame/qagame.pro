@@ -40,6 +40,8 @@ HEADERS += \
     ../code/qcommon/q_shared.h
 
 SOURCES += \
+    ../code/qcommon/q_math.c \
+    ../code/qcommon/q_shared.c \
     ../code/game/ai_chat.c \
     ../code/game/ai_cmd.c \
     ../code/game/ai_dmnet.c \
@@ -70,6 +72,4 @@ SOURCES += \
     ../code/game/g_team.c \
     ../code/game/g_trigger.c \
     ../code/game/g_utils.c \
-    ../code/game/g_weapon.c \
-    ../code/qcommon/q_math.c \
-    ../code/qcommon/q_shared.c
+    ../code/game/g_weapon.c

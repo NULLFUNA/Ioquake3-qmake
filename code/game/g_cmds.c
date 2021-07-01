@@ -513,7 +513,7 @@ SetTeam
 =================
 */
 void SetTeam( gentity_t *ent, const char *s ) {
-	int					team, oldTeam;
+	team_t				team, oldTeam;
 	gclient_t			*client;
 	int					clientNum;
 	spectatorState_t	specState;

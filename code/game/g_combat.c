@@ -99,7 +99,7 @@ void TossClientItems( gentity_t *self ) {
 	if ( weapon > WP_MACHINEGUN && weapon != WP_GRAPPLING_HOOK && 
 		self->client->ps.ammo[ weapon ] ) {
 		// find the item type for this weapon
-		item = BG_FindItemForWeapon( weapon );
+		item = BG_FindItemForWeapon( (weapon_t)weapon );
 
 		// spawn the item
 		Drop_Item( self, item, 0 );
@@ -110,7 +110,7 @@ void TossClientItems( gentity_t *self ) {
 		angle = 45;
 		for ( i = 1 ; i < PW_NUM_POWERUPS ; i++ ) {
 			if ( self->client->ps.powerups[ i ] > level.time ) {
-				item = BG_FindItemForPowerup( i );
+				item = BG_FindItemForPowerup( (powerup_t)i );
 				if ( !item ) {
 					continue;
 				}
