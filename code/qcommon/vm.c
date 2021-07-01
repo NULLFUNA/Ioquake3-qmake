@@ -55,7 +55,7 @@ void VM_Debug( int level ) {
 	vm_debugLevel = level;
 }
 
-cvar_t*	null_use_virtualmachine;
+cvar_t*	null_usevm;
 
 /*
 ==============
@@ -67,7 +67,7 @@ void VM_Init( void ) {
 	Cvar_Get( "vm_game", "2", CVAR_ARCHIVE );	// !@# SHIP WITH SET TO 2
 	Cvar_Get( "vm_ui", "2", CVAR_ARCHIVE );		// !@# SHIP WITH SET TO 2
 
-	null_use_virtualmachine = Cvar_Get( "null_use_virtualmachine", "0", CVAR_ARCHIVE | CVAR_LATCH );
+	null_usevm = Cvar_Get( "null_usevm", "0", CVAR_ARCHIVE | CVAR_LATCH );
 
 	Cmd_AddCommand ("vmprofile", VM_VmProfile_f );
 	Cmd_AddCommand ("vminfo", VM_VmInfo_f );
@@ -574,22 +574,23 @@ vm_t *VM_Create( const char *module, intptr_t (*systemCalls)(intptr_t *),
 
 
 
-	//	WCL: DISABLE FUCKIN VIRTUAL MACHINE
-	if(!null_use_virtualmachine->integer) {
+	//	WCL: flag to disable virtual machine loading
+	if( !null_usevm->integer ) {
 
+		//	Setup paths to module
 		const char* pchWorkingDir = Sys_DefaultInstallPath();
 		const char* pchModulePath = va("%s/baseq3/" LIB_PREFIX "%s" DLL_EXT, pchWorkingDir, module);
-		//	FIND DYNAMIC LIBRARY
+
+		//	Find module
 		vm->dllHandle = Sys_LoadGameDll(pchModulePath, &vm->entryPoint, VM_DllSyscall);
 
-		if(vm->dllHandle) {
-			vm->systemCall = systemCalls;
-			return vm;
-		} else {
+		if(!vm->dllHandle) {
 			Com_Error(ERR_FATAL, "Failed to load module:\n%s\n", pchModulePath);
 			return NULL;
 		}
 
+		vm->systemCall = systemCalls;
+		return vm;
 	}
 
 

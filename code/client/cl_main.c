@@ -52,7 +52,7 @@ cvar_t	*cl_voip;
 cvar_t	*cl_renderer;
 #endif
 
-cvar_t*	null_use_baserenderer;
+cvar_t*	null_baserender;
 
 cvar_t	*cl_nodelta;
 cvar_t	*cl_debugMove;
@@ -3205,10 +3205,10 @@ void CL_InitRef( void ) {
 	Com_Printf( "----- Initializing Renderer ----\n" );
 
 	//	WCL:	can switch renderer
-	null_use_baserenderer = Cvar_Get("null_use_baserenderer", "0", CVAR_ARCHIVE | CVAR_LATCH);
+	null_baserender = Cvar_Get("null_baserender", "0", CVAR_ARCHIVE | CVAR_LATCH);
 	const char*	pchRenderer = "opengl2";
 
-	if(null_use_baserenderer->integer)
+	if( null_baserender->integer )
 		pchRenderer = "opengl1";
 
 	Com_sprintf(dllName, sizeof(dllName), "renderer_%s_" ARCH_STRING DLL_EXT, pchRenderer);

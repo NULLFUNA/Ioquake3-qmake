@@ -24,3 +24,4 @@ build/debug/baseq3/q3history
 *.pid
 *.user
 quake.creator.user
+build/debug/qkey
