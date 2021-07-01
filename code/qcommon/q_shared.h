@@ -122,11 +122,19 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #endif
 
 #if (defined _MSC_VER)
+
 #define Q_EXPORT __declspec(dllexport)
 #elif (defined __SUNPRO_C)
 #define Q_EXPORT __global
+
 #elif ((__GNUC__ >= 3) && (!__EMX__) && (!sun))
+
+#ifdef __cplusplus	//	WCL: for exporting C++ functions
+#define Q_EXPORT extern "C" __attribute__((visibility("default")))
+#else
 #define Q_EXPORT __attribute__((visibility("default")))
+#endif
+
 #else
 #define Q_EXPORT
 #endif
@@ -1411,11 +1419,15 @@ typedef enum {
 } e_status;
 
 typedef enum _flag_status {
+
+	FLAG_INVALID	= -1,	//	WCL - qagame:	disable force update for flags
+
 	FLAG_ATBASE = 0,
 	FLAG_TAKEN,			// CTF
 	FLAG_TAKEN_RED,		// One Flag CTF
 	FLAG_TAKEN_BLUE,	// One Flag CTF
 	FLAG_DROPPED
+
 } flagStatus_t;
 
 
