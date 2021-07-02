@@ -29,3 +29,4 @@ build/ui/Makefile
 build/cgame/Makefile
 build/Makefile
 build/qagame/Makefile
+*.pak

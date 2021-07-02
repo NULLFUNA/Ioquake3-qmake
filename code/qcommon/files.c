@@ -184,6 +184,9 @@ or configs will never get loaded from disk!
 // NOW defined in build files
 //#define PRE_RELEASE_TADEMO
 
+//	WCL: new pak extension
+static const char* g_pchPakExtension = ".pak";
+
 #define MAX_ZPATH			256
 #define	MAX_SEARCH_PATHS	4096
 #define MAX_FILEHASH_SIZE	1024
@@ -227,6 +230,7 @@ static	char		fs_gamedir[MAX_OSPATH];	// this will be a single file name with no 
 static	cvar_t		*fs_debug;
 static	cvar_t		*fs_homepath;
 
+
 static	cvar_t		*fs_steampath;
 static	cvar_t		*fs_gogpath;
 
@@ -240,6 +244,8 @@ static	int			fs_loadStack;			// total files in memory
 static	int			fs_packFiles = 0;		// total number of files in packs
 
 static int fs_checksumFeed;
+
+static	cvar_t		*null_newpaks;			//	WCL: new pak ext
 
 typedef union qfile_gus {
 	FILE*		o;
@@ -313,21 +319,6 @@ FS_PakIsPure
 =================
 */
 qboolean FS_PakIsPure( pack_t *pack ) {
-	int i;
-
-//	if ( fs_numServerPaks ) {
-//		for ( i = 0 ; i < fs_numServerPaks ; i++ ) {
-//			// FIXME: also use hashed file names
-//			// NOTE TTimo: a pk3 with same checksum but different name would be validated too
-//			//   I don't see this as allowing for any exploit, it would only happen if the client does manips of its file names 'not a bug'
-//			if ( pack->checksum == fs_serverPaks[i] ) {
-//				return qtrue;		// on the aproved list
-//			}
-//		}
-//		return qfalse;	// not on the pure server pak list
-//	}
-
-
 	//	WCL:	allow join to servers with sv_pure 1
 	return qtrue;
 }
@@ -548,7 +539,7 @@ static void FS_CheckFilenameIsMutable( const char *filename,
 	// Check if the filename ends with the library, QVM, or pk3 extension
 	if( Sys_DllExtension( filename )
 		|| COM_CompareExtension( filename, ".qvm" )
-		|| COM_CompareExtension( filename, ".pk3" ) )
+		|| COM_CompareExtension( filename, g_pchPakExtension ) )	//	WCL: new pak extension
 	{
 		Com_Error( ERR_FATAL, "%s: Not allowed to manipulate '%s' due "
 			"to %s extension", function, filename, COM_GetExtension( filename ) );
@@ -2053,10 +2044,11 @@ static pack_t *FS_LoadZipFile(const char *zipfile, const char *basename)
 	Q_strncpyz( pack->pakFilename, zipfile, sizeof( pack->pakFilename ) );
 	Q_strncpyz( pack->pakBasename, basename, sizeof( pack->pakBasename ) );
 
-	// strip .pk3 if needed
-	if ( strlen( pack->pakBasename ) > 4 && !Q_stricmp( pack->pakBasename + strlen( pack->pakBasename ) - 4, ".pk3" ) ) {
-		pack->pakBasename[strlen( pack->pakBasename ) - 4] = 0;
-	}
+	//	strip .pak if needed
+	//	WCL: new pak extension
+	if( strlen( pack->pakBasename ) > 4 )
+		if ( !Q_stricmp( pack->pakBasename + strlen( pack->pakBasename ) - 4, g_pchPakExtension ) )
+			pack->pakBasename[strlen( pack->pakBasename ) - 4] = 0;
 
 	pack->handle = uf;
 	pack->numfiles = gi.number_entry;
@@ -2543,14 +2535,18 @@ int	FS_GetModList( char *listbuf, int bufsize ) {
 			continue;
 		}
 
-		// in order to be a valid mod the directory must contain at least one .pk3 or .pk3dir
+
+		//	WCL: new pak extension
+
+		// in order to be a valid mod the directory must contain at least one .pk3 or .pak or .pk3dir
 		// we didn't keep the information when we merged the directory names, as to what OS Path it was found under
 		// so we will try each of them here
 		for (j = 0; j < ARRAY_LEN(paths); j++) {
 			path = FS_BuildOSPath(paths[j], name, "");
 			nPaks = nDirs = nPakDirs = 0;
-			pPaks = Sys_ListFiles(path, ".pk3", NULL, &nPaks, qfalse);
+			pPaks = Sys_ListFiles(path, g_pchPakExtension, NULL, &nPaks, qfalse);
 			pDirs = Sys_ListFiles(path, "/", NULL, &nDirs, qfalse);
+
 			for (k = 0; k < nDirs; k++) {
 				// we only want to count directories ending with ".pk3dir"
 				if (FS_IsExt(pDirs[k], ".pk3dir", strlen(pDirs[k]))) {
@@ -2909,7 +2905,7 @@ void FS_AddGameDirectory( const char *path, const char *dir ) {
 	curpath[strlen(curpath) - 1] = '\0';	// strip the trailing slash
 
 	// Get .pk3 files
-	pakfiles = Sys_ListFiles(curpath, ".pk3", NULL, &numfiles, qfalse);
+	pakfiles = Sys_ListFiles(curpath, g_pchPakExtension, NULL, &numfiles, qfalse);
 
 	qsort( pakfiles, numfiles, sizeof(char*), paksort );
 
@@ -3146,23 +3142,23 @@ qboolean FS_ComparePaks( char *neededpaks, int len, qboolean dlstring ) {
 				// Remote name
 				Q_strcat( neededpaks, len, "@");
 				Q_strcat( neededpaks, len, fs_serverReferencedPakNames[i] );
-				Q_strcat( neededpaks, len, ".pk3" );
+				Q_strcat( neededpaks, len, g_pchPakExtension );
 
 				// Local name
 				Q_strcat( neededpaks, len, "@");
 				// Do we have one with the same name?
-				if ( FS_SV_FileExists( va( "%s.pk3", fs_serverReferencedPakNames[i] ) ) )
+				if ( FS_SV_FileExists( va( "%s%s", fs_serverReferencedPakNames[i], g_pchPakExtension ) ) )
 				{
 					char st[MAX_ZPATH];
 					// We already have one called this, we need to download it to another name
 					// Make something up with the checksum in it
-					Com_sprintf( st, sizeof( st ), "%s.%08x.pk3", fs_serverReferencedPakNames[i], fs_serverReferencedPaks[i] );
+					Com_sprintf( st, sizeof( st ), "%s.%08x%s", fs_serverReferencedPakNames[i], fs_serverReferencedPaks[i], g_pchPakExtension );
 					Q_strcat( neededpaks, len, st );
 				}
 				else
 				{
 					Q_strcat( neededpaks, len, fs_serverReferencedPakNames[i] );
-					Q_strcat( neededpaks, len, ".pk3" );
+					Q_strcat( neededpaks, len, g_pchPakExtension );
 				}
 
 				// Find out whether it might have overflowed the buffer and don't add this file to the
@@ -3176,9 +3172,9 @@ qboolean FS_ComparePaks( char *neededpaks, int len, qboolean dlstring ) {
 			else
 			{
 				Q_strcat( neededpaks, len, fs_serverReferencedPakNames[i] );
-				Q_strcat( neededpaks, len, ".pk3" );
+				Q_strcat( neededpaks, len, g_pchPakExtension );
 				// Do we have one with the same name?
-				if ( FS_SV_FileExists( va( "%s.pk3", fs_serverReferencedPakNames[i] ) ) )
+				if ( FS_SV_FileExists( va( "%s%s", fs_serverReferencedPakNames[i], g_pchPakExtension ) ) )
 				{
 					Q_strcat( neededpaks, len, " (local file exists with wrong checksum)");
 				}
@@ -3408,7 +3404,7 @@ static void FS_Startup( const char *gameName )
 
 	Com_Printf( "----------------------\n" );
 
-	Com_Printf( "%d files in pk3 files\n", fs_packFiles );
+	Com_Printf( "%d files in pak files\n", fs_packFiles );
 }
 
 #ifndef STANDALONE
@@ -3426,7 +3422,7 @@ STANDALONE in q_shared.h
 */
 static void FS_CheckPak0( void ) {
 	Com_Printf("----------------------\n");
-	Com_Printf("Skipped pak0.pk3 check\n");
+	Com_Printf("Skipped pak0.pak check\n");
 	Com_Printf("----------------------\n");
 }
 #endif
@@ -3765,6 +3761,7 @@ void FS_InitFilesystem( void ) {
 	// we have to specially handle this, because normal command
 	// line variable sets don't happen until after the filesystem
 	// has already been initialized
+
 	Com_StartupVariable("fs_basepath");
 	Com_StartupVariable("fs_homepath");
 	Com_StartupVariable("fs_game");
@@ -3772,12 +3769,22 @@ void FS_InitFilesystem( void ) {
 	if(!FS_FilenameCompare(Cvar_VariableString("fs_game"), com_basegame->string))
 		Cvar_Set("fs_game", "");
 
+	//	WCL: new pak extension
+	null_newpaks = Cvar_Get("null_newpaks", "1", CVAR_ARCHIVE  );
+
+	//if( null_newpaks->integer )
+	//	g_pchPakExtension = ".pak";
+	//else
+	//	g_pchPakExtension = ".pk3";
+
+	//	use old pak ext cause cvar system isn't working while filesystem init
+	//	will be removed in futre
+	g_pchPakExtension = ".pk3";
+
+
+
 	// try to start up normally
 	FS_Startup(com_basegame->string);
-
-#ifndef STANDALONE
-	FS_CheckPak0( );
-#endif
 
 	// if we can't find default.cfg, assume that the paths are
 	// busted and error out now, rather than getting an unreadable
