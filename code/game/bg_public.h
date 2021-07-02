@@ -24,6 +24,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 // because games can change separately from the main system version, we need a
 // second version that must match between game and cgame
+#ifndef BGMISC_H
+#define BGMISC_H
 
 #define	GAME_VERSION		BASEGAME "-1"
 
@@ -593,7 +595,9 @@ typedef enum {
 	MOD_SUICIDE,
 	MOD_TARGET_LASER,
 	MOD_TRIGGER_HURT,
-	MOD_GRAPPLE
+	MOD_GRAPPLE,
+
+	MOD_NUM
 } meansOfDeath_t;
 
 
@@ -729,3 +733,4 @@ qboolean	BG_PlayerTouchesItem( playerState_t *ps, entityState_t *item, int atTim
 #define KAMI_BOOMSPHERE_MAXRADIUS		720
 #define KAMI_SHOCKWAVE2_MAXRADIUS		704
 
+#endif

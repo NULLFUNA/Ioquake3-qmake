@@ -107,12 +107,20 @@ static void CG_Obituary( entityState_t *ent ) {
 		attackerInfo = CG_ConfigString( CS_PLAYERS + attacker );
 	}
 
+
+
 	targetInfo = CG_ConfigString( CS_PLAYERS + target );
 	if ( !targetInfo ) {
 		return;
 	}
 	Q_strncpyz( targetName, Info_ValueForKey( targetInfo, "n" ), sizeof(targetName) - 2);
 	strcat( targetName, S_COLOR_WHITE );
+
+	//	Push kill event if killhistory enabled
+	if( g_pKillhistory->m_cvarEnabled.integer ) {
+		g_pKillhistory->Push(attacker, target, (meansOfDeath_t)mod );
+		return;
+	}
 
 	message2 = "";
 

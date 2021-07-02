@@ -1,4 +1,4 @@
-/*
+﻿/*
 ===========================================================================
 Copyright (C) 1999-2005 Id Software, Inc.
 
@@ -993,10 +993,6 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame)
 	if ( cg_drawTimer.integer ) {
 		y = CG_DrawTimer( y );
 	}
-	if ( cg_drawAttacker.integer ) {
-		CG_DrawAttacker( y );
-	}
-
 }
 
 /*
@@ -2540,11 +2536,7 @@ static void CG_Draw2D(stereoFrame_t stereoFrame)
 		return;
 	}
 
-/*
-	if (cg.cameraMode) {
-		return;
-	}
-*/
+
 	if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR ) {
 		CG_DrawSpectator();
 
@@ -2556,57 +2548,34 @@ static void CG_Draw2D(stereoFrame_t stereoFrame)
 		// don't draw any status if dead or the scoreboard is being explicitly shown
 		if ( !cg.showScores && cg.snap->ps.stats[STAT_HEALTH] > 0 ) {
 
-#ifdef MISSIONPACK
-			if ( cg_drawStatus.integer ) {
-				Menu_PaintAll();
-				CG_DrawTimedMenus();
-			}
-#else
 			CG_DrawStatusBar();
-#endif
       
 			CG_DrawAmmoWarning();
 
-#ifdef MISSIONPACK
-			CG_DrawProxWarning();
-#endif      
 			if(stereoFrame == STEREO_CENTER)
 				CG_DrawCrosshair();
 			CG_DrawCrosshairNames();
 			CG_DrawWeaponSelect();
 
-#ifndef MISSIONPACK
 			CG_DrawHoldableItem();
-#else
-			//CG_DrawPersistantPowerup();
-#endif
+
 			CG_DrawReward();
 		}
 	}
 
-	if ( cgs.gametype >= GT_TEAM ) {
-#ifndef MISSIONPACK
+	if ( cgs.gametype >= GT_TEAM )
 		CG_DrawTeamInfo();
-#endif
-	}
+
 
 	CG_DrawVote();
 	CG_DrawTeamVote();
 
 	CG_DrawLagometer();
 
-#ifdef MISSIONPACK
-	if (!cg_paused.integer) {
-		CG_DrawUpperRight(stereoFrame);
-	}
-#else
 	CG_DrawUpperRight(stereoFrame);
-#endif
 
-#ifndef MISSIONPACK
 	CG_DrawLowerRight();
 	CG_DrawLowerLeft();
-#endif
 
 	if ( !CG_DrawFollow() ) {
 		CG_DrawWarmup();
@@ -2652,6 +2621,7 @@ void CG_DrawActive( stereoFrame_t stereoView ) {
 
 	// draw status bar and other floating elements
  	CG_Draw2D(stereoView);
+	g_pKillhistory->Draw();
 }
 
 

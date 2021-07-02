@@ -19,11 +19,15 @@ along with Quake III Arena source code; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ===========================================================================
 */
-//
+#ifndef CG_LOCAL_H
+#define CG_LOCAL_H
+
 #include "../qcommon/q_shared.h"
 #include "../renderercommon/tr_types.h"
 #include "../game/bg_public.h"
 #include "cg_public.h"
+
+#include "killhistory.h"
 
 
 // The entire cgame module is unloaded and reloaded on each level change,
@@ -1139,7 +1143,6 @@ extern	vmCvar_t		cg_thirdPersonRange;
 extern	vmCvar_t		cg_thirdPersonAngle;
 extern	vmCvar_t		cg_thirdPerson;
 extern	vmCvar_t		cg_lagometer;
-extern	vmCvar_t		cg_drawAttacker;
 extern	vmCvar_t		cg_synchronousClients;
 extern	vmCvar_t		cg_teamChatTime;
 extern	vmCvar_t		cg_teamChatHeight;
@@ -1686,4 +1689,12 @@ void	CG_ParticleExplosion (char *animStr, vec3_t origin, vec3_t vel, int duratio
 extern qboolean		initparticles;
 int CG_NewParticleArea ( int num );
 
+/* nullFuna Changes */
 
+//	WUI:	kill history drawing
+extern WUIKillhistory*	g_pKillhistory;
+
+void	WUI_DrawPanel(int x, int y, int sizex, int sizey, qhandle_t hPanel) ;
+void	WUI_DrawColorPanel(int x, int y, int sizex, int sizey, vec4_t color, qhandle_t hPanel);
+
+#endif

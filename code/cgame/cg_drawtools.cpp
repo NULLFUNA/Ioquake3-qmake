@@ -23,6 +23,22 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // cg_drawtools.c -- helper functions called by cg_draw, cg_scoreboard, cg_info, etc
 #include "cg_local.h"
 
+void	WUI_DrawPanel(int x, int y, int sizex, int sizey, qhandle_t hPanel) {
+	vec4_t bgColor;
+	bgColor[0] = bgColor[1] = bgColor[2] = 0;
+	bgColor[3] = 160;
+	trap_R_SetColor(bgColor);
+	CG_DrawPic(x, y, sizex, sizey, hPanel);
+	trap_R_SetColor(NULL);
+}
+
+void	WUI_DrawColorPanel(int x, int y, int sizex, int sizey, vec4_t color, qhandle_t hPanel) {
+	trap_R_SetColor(color);
+	CG_DrawPic(x, y, sizex, sizey, hPanel);
+	trap_R_SetColor(NULL);
+}
+
+
 /*
 ================
 CG_AdjustFrom640
@@ -149,7 +165,6 @@ void CG_DrawChar( int x, int y, int width, int height, int ch ) {
 					   fcol + size, frow + size, 
 					   cgs.media.charsetShader );
 }
-
 
 /*
 ==================

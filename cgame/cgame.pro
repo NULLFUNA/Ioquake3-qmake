@@ -24,7 +24,8 @@ HEADERS += \
     ../code/cgame/cg_local.h \
     ../code/cgame/cg_public.h \
     ../code/game/bg_public.h \
-    ../code/qcommon/q_shared.h
+    ../code/qcommon/q_shared.h \
+     ../code/cgame/killhistory.h
 
 SOURCES += \
     ../code/cgame/cg_consolecmds.cpp \
@@ -51,4 +52,6 @@ SOURCES += \
     ../code/game/bg_pmove.cpp \
     ../code/game/bg_slidemove.cpp \
     ../code/qcommon/q_math.c \
-    ../code/qcommon/q_shared.c
+    ../code/qcommon/q_shared.c \
+    ../code/cgame/killhistory.cpp
+

@@ -143,7 +143,6 @@ vmCvar_t	cg_thirdPerson;
 vmCvar_t	cg_thirdPersonRange;
 vmCvar_t	cg_thirdPersonAngle;
 vmCvar_t	cg_lagometer;
-vmCvar_t	cg_drawAttacker;
 vmCvar_t	cg_synchronousClients;
 vmCvar_t 	cg_teamChatTime;
 vmCvar_t 	cg_teamChatHeight;
@@ -224,7 +223,6 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_draw3dIcons, "cg_draw3dIcons", "1", CVAR_ARCHIVE  },
 	{ &cg_drawIcons, "cg_drawIcons", "1", CVAR_ARCHIVE  },
 	{ &cg_drawAmmoWarning, "cg_drawAmmoWarning", "1", CVAR_ARCHIVE  },
-	{ &cg_drawAttacker, "cg_drawAttacker", "1", CVAR_ARCHIVE  },
 	{ &cg_drawCrosshair, "cg_drawCrosshair", "4", CVAR_ARCHIVE },
 	{ &cg_drawCrosshairNames, "cg_drawCrosshairNames", "1", CVAR_ARCHIVE },
 	{ &cg_drawRewards, "cg_drawRewards", "1", CVAR_ARCHIVE },
@@ -1058,6 +1056,9 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum ) {
 
 	CG_RegisterClients();		// if low on memory, some clients will be deferred
 
+	g_pKillhistory = new WUIKillhistory();
+	g_pKillhistory->Initiliaze();	//	Initiliaze WUI Killhistory
+
 	cg.loading = qfalse;	// future players will be deferred
 
 	CG_InitLocalEntities();
@@ -1078,9 +1079,6 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum ) {
 
 	trap_S_ClearLoopingSounds( qtrue );
 
-	//	WCL: test class for checking is C++ working fine
-	TestClass	testing;
-	testing.PrintMessage();
 }
 
 /*
