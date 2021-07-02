@@ -30,3 +30,4 @@ build/cgame/Makefile
 build/Makefile
 build/qagame/Makefile
 *.pak
+build/debug/unfreeze/q3history

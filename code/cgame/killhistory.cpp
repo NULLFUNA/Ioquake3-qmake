@@ -47,7 +47,7 @@ void WUIKillhistory::Initiliaze() {
 
 
 	this->m_hPanel						= trap_R_RegisterShader("wui/panel.tga");
-
+	this->m_hQuad						= trap_R_RegisterShader("wui/quad.tga");
 }
 
 void WUIKillhistory::Draw() {
@@ -106,14 +106,14 @@ void WUIKillhistory::Draw() {
 		int startY = upBorder + Count * 25;
 		int offsetX;
 
-		const char*	pchTarget = pKill->m_sTargetName.c_str();
-		const char*	pchKiller = pKill->m_sKillerName.c_str();
+		const char*	pchTarget = pKill->m_sTargetName.toStdString().c_str();
+		const char*	pchKiller = pKill->m_sKillerName.toStdString().c_str();
 
 		//	Is this suicide?
 		if ( pKill->m_iKillerIndex == pKill->m_iTargetIndex ) {
 			offsetX = CG_DrawStrlen( pchTarget ) * FontSize + FontSize * 2 + IconSize;
 			//	Draw background panel
-			startX -= offsetX;
+			startX -= this->CalcStartX( pKill, offsetX );
 			WUI_DrawColorPanel( startX - PanelBorder, startY, offsetX + PanelBorder * 2, 20, bgColor, this->m_hPanel );
 			//	Draw killer's weapon icon
 
@@ -131,13 +131,20 @@ void WUIKillhistory::Draw() {
 			startX -= offsetX;
 			WUI_DrawColorPanel( startX - PanelBorder, startY, offsetX + PanelBorder * 2, 20, bgColor, this->m_hPanel );
 
+
 			//	Draw killer's name
 			CG_DrawStringExt( startX, startY + 8, pchKiller, killerColor, qtrue, qfalse, FontSize, FontSize, CG_DrawStrlen( pchKiller ) );
 
-
-			//	Draw killer's weapon icon
 			startX += CG_DrawStrlen(pchKiller) * FontSize + FontSize;
 
+			//	Draw quad image
+//			if( cg_entities[pKill->m_iKillerIndex].currentState.powerups & ( 1 << PW_QUAD ) ) {
+//				trap_R_SetColor( picColor );
+//				CG_DrawPic( startX, startY + 2, IconSize, IconSize, this->m_hQuad );
+//			}
+
+
+			//	Draw killer's weapon icon
 			trap_R_SetColor( picColor );
 			CG_DrawPic( startX, startY + 2, IconSize, IconSize, this->m_lIcons[pKill->m_iMod] );
 
@@ -182,4 +189,8 @@ void WUIKillhistory::Push( int iKiller, int iTarget, meansOfDeath_t iMod ) {
 		return;
 	}
 
+}
+
+int		WUIKillhistory::CalcStartX( KillEventInfo_t* pKill, int& refiOffset ) {
+	return refiOffset;
 }

@@ -11,55 +11,46 @@
 
 #include "../qcommon/q_shared.h"
 #include "../game/bg_public.h"
-#include <string>
+#include <QString>
 
 //	Only 24 kills infos can be stored at once
 constexpr int MAX_KILLEVENTS = 24;
 
 class WUIKillhistory {
+public:
+	vmCvar_t					m_cvarEnabled;						//	Is killhistory enabled?
+	vmCvar_t					m_cvarMaxKills;						//	Max count of kills infos displayed on screen
+
 private:
+
+	//	Additional kill event flags
+	enum KillEventFlags { QUAD_USED, INVIS_USED };
 
 	//	Info about kill event
 	struct	KillEventInfo_t {
-		//	Is this spot used?
-		qboolean				m_bUsed;
-
-		//	Hmmm... Killer's name
-		std::string				m_sKillerName;
-
-		//	Killer's index
-		int						m_iKillerIndex;
-
-		//	Targets's name
-		std::string				m_sTargetName;
-
-		//	Targets's index
-		int						m_iTargetIndex;
-
-		//	How player was killed
-		meansOfDeath_t			m_iMod;
-
-		//	Lifetime of event
-		int						m_iTime;
+		qboolean				m_bUsed;							//	Is this spot used?
+		QString					m_sKillerName;						//	Hmmm... Killer's name
+		int						m_iKillerIndex;						//	Killer's index
+		QString					m_sTargetName;						//	Targets's name
+		int						m_iTargetIndex;						//	Targets's index
+		meansOfDeath_t			m_iMod;								//	How player was killed
+		KillEventFlags			m_iFlags;							//	Kill event flags
+		int						m_iTime;							//	Lifetime of event
 	};
 
+	KillEventInfo_t				m_lKillEvents[MAX_KILLEVENTS];		//	List of kills
+	qhandle_t					m_lIcons[MOD_NUM];					//	List of icons
+	qhandle_t					m_hPanel;							//	Background panel
+	qhandle_t					m_hQuad;							//	Quad image
 
-	KillEventInfo_t				m_lKillEvents[MAX_KILLEVENTS];	//	List of kills
-	qhandle_t					m_lIcons[MOD_NUM];				//	List of icons
-	qhandle_t					m_hPanel;						//	Background panel
 
 public:
-	vmCvar_t					m_cvarEnabled;					//	Is killhistory enabled?
-	vmCvar_t					m_cvarMaxKills;					//	Max count of kills infos displayed on screen
+	void	Initiliaze();											//	Register shaders and ConVars
+	void	Draw();													//	Draw killhistory
+	void	Push( int iKiller, int iTarget, meansOfDeath_t iMod ); 	//	Push new kill event
 
-	//	Register shaders and ConVars
-	void	Initiliaze();
-
-	//	Draw killhistory
-	void	Draw();
-
-	//	Push new kill info
-	void	Push(int iKiller, int iTarget, meansOfDeath_t iMod);
+private:
+	int		CalcStartX( KillEventInfo_t* pKill, int& refiOffset );					//	Calc offset x
 
 
 };

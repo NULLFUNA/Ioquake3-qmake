@@ -1,4 +1,5 @@
 QT -= gui
+QT += core
 
 TEMPLATE = lib
 DEFINES += CGAME_LIBRARY

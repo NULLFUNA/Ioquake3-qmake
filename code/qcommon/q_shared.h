@@ -859,7 +859,7 @@ typedef struct
 	byte	b5;
 	byte	b6;
 	byte	b7;
-} qint64;
+} q3int64;
 
 //=============================================
 /*
