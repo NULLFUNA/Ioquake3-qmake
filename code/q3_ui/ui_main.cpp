@@ -69,7 +69,7 @@ Q_EXPORT intptr_t vmMain( int command, int arg0, int arg1, int arg2, int arg3, i
 		return UI_IsFullscreen();
 
 	case UI_SET_ACTIVE_MENU:
-		UI_SetActiveMenu( arg0 );
+		UI_SetActiveMenu( (uiMenuCommand_t)arg0 );
 		return 0;
 
 	case UI_CONSOLE_COMMAND:

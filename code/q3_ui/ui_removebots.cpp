@@ -66,7 +66,7 @@ typedef struct {
 
 	menutext_s		bots[7];
 
-	menubitmap_s	delete;
+	menubitmap_s	del;
 	menubitmap_s	back;
 
 	int				numBots;
@@ -292,16 +292,16 @@ static void UI_RemoveBotsMenu_Init( void ) {
 		removeBotsMenuInfo.bots[n].style			= UI_LEFT|UI_SMALLFONT;
 	}
 
-	removeBotsMenuInfo.delete.generic.type		= MTYPE_BITMAP;
-	removeBotsMenuInfo.delete.generic.name		= ART_DELETE0;
-	removeBotsMenuInfo.delete.generic.flags		= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
-	removeBotsMenuInfo.delete.generic.id		= ID_DELETE;
-	removeBotsMenuInfo.delete.generic.callback	= UI_RemoveBotsMenu_DeleteEvent;
-	removeBotsMenuInfo.delete.generic.x			= 320+128-128;
-	removeBotsMenuInfo.delete.generic.y			= 256+128-64;
-	removeBotsMenuInfo.delete.width  			= 128;
-	removeBotsMenuInfo.delete.height  			= 64;
-	removeBotsMenuInfo.delete.focuspic			= ART_DELETE1;
+	removeBotsMenuInfo.del.generic.type			= MTYPE_BITMAP;
+	removeBotsMenuInfo.del.generic.name			= ART_DELETE0;
+	removeBotsMenuInfo.del.generic.flags		= QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
+	removeBotsMenuInfo.del.generic.id			= ID_DELETE;
+	removeBotsMenuInfo.del.generic.callback		= UI_RemoveBotsMenu_DeleteEvent;
+	removeBotsMenuInfo.del.generic.x			= 320+128-128;
+	removeBotsMenuInfo.del.generic.y			= 256+128-64;
+	removeBotsMenuInfo.del.width				= 128;
+	removeBotsMenuInfo.del.height				= 64;
+	removeBotsMenuInfo.del.focuspic				= ART_DELETE1;
 
 	removeBotsMenuInfo.back.generic.type		= MTYPE_BITMAP;
 	removeBotsMenuInfo.back.generic.name		= ART_BACK0;
@@ -322,7 +322,7 @@ static void UI_RemoveBotsMenu_Init( void ) {
 	for( n = 0; n < count; n++ ) {
 		Menu_AddItem( &removeBotsMenuInfo.menu, &removeBotsMenuInfo.bots[n] );
 	}
-	Menu_AddItem( &removeBotsMenuInfo.menu, &removeBotsMenuInfo.delete );
+	Menu_AddItem( &removeBotsMenuInfo.menu, &removeBotsMenuInfo.del );
 	Menu_AddItem( &removeBotsMenuInfo.menu, &removeBotsMenuInfo.back );
 
 	removeBotsMenuInfo.baseBotNum = 0;

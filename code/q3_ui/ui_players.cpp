@@ -713,12 +713,12 @@ UI_DrawPlayer
 */
 void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int time ) {
 	refdef_t		refdef;
-	refEntity_t		legs = {0};
-	refEntity_t		torso = {0};
-	refEntity_t		head = {0};
-	refEntity_t		gun = {0};
-	refEntity_t		barrel = {0};
-	refEntity_t		flash = {0};
+	refEntity_t		legs = {RT_MODEL};
+	refEntity_t		torso = {RT_MODEL};
+	refEntity_t		head = {RT_MODEL};
+	refEntity_t		gun = {RT_MODEL};
+	refEntity_t		barrel = {RT_MODEL};
+	refEntity_t		flash = {RT_MODEL};
 	vec3_t			origin;
 	int				renderfx;
 	vec3_t			mins = {-16, -16, -24};
