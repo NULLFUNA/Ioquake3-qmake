@@ -137,13 +137,6 @@ void WUIKillhistory::Draw() {
 
 			startX += CG_DrawStrlen(pchKiller) * FontSize + FontSize;
 
-			//	Draw quad image
-//			if( cg_entities[pKill->m_iKillerIndex].currentState.powerups & ( 1 << PW_QUAD ) ) {
-//				trap_R_SetColor( picColor );
-//				CG_DrawPic( startX, startY + 2, IconSize, IconSize, this->m_hQuad );
-//			}
-
-
 			//	Draw killer's weapon icon
 			trap_R_SetColor( picColor );
 			CG_DrawPic( startX, startY + 2, IconSize, IconSize, this->m_lIcons[pKill->m_iMod] );
@@ -174,16 +167,16 @@ void WUIKillhistory::Push( int iKiller, int iTarget, meansOfDeath_t iMod ) {
 		if ( pKill->m_bUsed )
 			continue;
 
-		if( iKiller != ENTITYNUM_WORLD )
+		if( iKiller != ENTITYNUM_WORLD ) {
 			pKill->m_sKillerName	= Info_ValueForKey( CG_ConfigString( CS_PLAYERS + iKiller ), "n" );
-		else
+			pKill->m_iKillerIndex	= iKiller;
+		} else
 			pKill->m_iKillerIndex	= iTarget;
 
 		pKill->m_sTargetName		= Info_ValueForKey( CG_ConfigString( CS_PLAYERS + iTarget ), "n" );
 		pKill->m_iMod				= iMod;
 		pKill->m_iTime				= cg.time + 5000;
 		pKill->m_iTargetIndex		= iTarget;
-		pKill->m_iKillerIndex		= iKiller;
 		pKill->m_bUsed				= qtrue;
 
 		return;

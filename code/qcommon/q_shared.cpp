@@ -229,9 +229,9 @@ int	LongNoSwap (int l)
 	return l;
 }
 
-qint64 Long64Swap (qint64 ll)
+q3int64 Long64Swap (q3int64 ll)
 {
-	qint64	result;
+	q3int64	result;
 
 	result.b0 = ll.b7;
 	result.b1 = ll.b6;
@@ -245,7 +245,7 @@ qint64 Long64Swap (qint64 ll)
 	return result;
 }
 
-qint64 Long64NoSwap (qint64 ll)
+q3int64 Long64NoSwap (q3int64 ll)
 {
 	return ll;
 }
