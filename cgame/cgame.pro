@@ -26,7 +26,8 @@ HEADERS += \
     ../code/cgame/cg_public.h \
     ../code/game/bg_public.h \
     ../code/qcommon/q_shared.h \
-     ../code/cgame/killhistory.h
+     ../code/cgame/killhistory.h \
+    ../code/qcommon/shared.h
 
 SOURCES += \
     ../code/cgame/cg_consolecmds.cpp \

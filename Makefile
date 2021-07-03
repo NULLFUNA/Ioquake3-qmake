@@ -978,6 +978,10 @@ ifndef RANLIB
   RANLIB=ranlib
 endif
 
+#   WCL: add flag to pass errors
+BASE_CFLAGS += -fpermissive
+BASE_CFLAGS += -Wno-narrowing
+
 ifneq ($(HAVE_VM_COMPILED),true)
   BASE_CFLAGS += -DNO_VM_COMPILED
   BUILD_GAME_QVM=0
