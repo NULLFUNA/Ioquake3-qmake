@@ -12,41 +12,37 @@
 
 #include <qcommon.h>
 #include <q_shared.h>
+#include <../renderercommon/tr_public.h>
 
 typedef enum {
 
 	LIBT_NONE,		//	empty handle
-	LIBT_OLDAPI,	//	support for old modules - export vmMain()
-	LIBT_NEWAPI		//	aviable only in c++		- export GetApi()
+
+	LIBT_CLIENT,	//	Load client module
+	LIBT_SERVER,	//	Load server module
+	LIBT_UI,		//	Load ui module
+
+	LIBT_RENDER,	//	Load renderer
+
+	LIBT_ZLIB,		//	Load zlib
 
 } libType_t;
 
-//	handle of library module
 typedef struct {
 
-	libType_t	m_iType;
+	void*				m_hLib;
+	libType_t			m_iLibType;
+
+	/* --- FOR OLD-TYPE LIBRARIES --- */
+	intptr_t			(*m_pSystemCall)( intptr_t *parms );
+	intptr_t			(QDECL *m_pEntryPoint)( int callNum, ... );
+	refexport_t*		m_pRef;
+	byte*				m_pDataBase;
+	/* ------------------------------ */
 
 
-	char		m_chName[MAX_QPATH];		//	library name
-	void*		m_pSearchPath;				//	hint for FS_ReadFileDir()
-
-	void*		m_hLibrary;					//	handle of library
-
-
-	/* --- FOR OLD API --- */
-
-	intptr_t	( *m_pSystemCall )( intptr_t *parms );			//	from cl_cgame and sv_game
-	intptr_t	( QDECL *m_pEntryPoint )( int callNum, ... );		//	vmMain
-
-
-	/* --- FOR NEW API --- */
-
-	//	will be placed later
 
 } qlib_t;
-
-void		InitiliazeLibLoad();
-qlib_t*		LoadModule( const char* pchName );
 
 
 #endif // LIBLOAD_H

@@ -202,7 +202,7 @@ CG_DrawField
 Draws large numbers for status bar and powerups
 ==============
 */
-#ifndef MISSIONPACK
+#ifndef MISSIONPACKs
 static void CG_DrawField (int x, int y, int width, int value) {
 	char	num[16], *ptr;
 	int		l;
@@ -651,59 +651,6 @@ static void CG_DrawStatusBar( void ) {
 
 ===========================================================================================
 */
-
-/*
-================
-CG_DrawAttacker
-
-================
-*/
-static float CG_DrawAttacker( float y ) {
-	int			t;
-	float		size;
-	vec3_t		angles;
-	const char	*info;
-	const char	*name;
-	int			clientNum;
-
-	if ( cg.predictedPlayerState.stats[STAT_HEALTH] <= 0 ) {
-		return y;
-	}
-
-	if ( !cg.attackerTime ) {
-		return y;
-	}
-
-	clientNum = cg.predictedPlayerState.persistant[PERS_ATTACKER];
-	if ( clientNum < 0 || clientNum >= MAX_CLIENTS || clientNum == cg.snap->ps.clientNum ) {
-		return y;
-	}
-
-	if ( !cgs.clientinfo[clientNum].infoValid ) {
-		cg.attackerTime = 0;
-		return y;
-	}
-
-	t = cg.time - cg.attackerTime;
-	if ( t > ATTACKER_HEAD_TIME ) {
-		cg.attackerTime = 0;
-		return y;
-	}
-
-	size = ICON_SIZE * 1.25;
-
-	angles[PITCH] = 0;
-	angles[YAW] = 180;
-	angles[ROLL] = 0;
-	CG_DrawHead( 640 - size, y, size, size, clientNum, angles );
-
-	info = CG_ConfigString( CS_PLAYERS + clientNum );
-	name = Info_ValueForKey(  info, "n" );
-	y += size;
-	CG_DrawBigString( 640 - ( Q_PrintStrlen( name ) * BIGCHAR_WIDTH), y, name, 0.5 );
-
-	return y + BIGCHAR_HEIGHT + 2;
-}
 
 /*
 ==================
@@ -1334,7 +1281,7 @@ static void CG_DrawLowerLeft( void ) {
 	} 
 
 
-	CG_DrawPickupItem( y );
+	//CG_DrawPickupItem( y );
 }
 #endif // MISSIONPACK
 
@@ -2548,14 +2495,13 @@ static void CG_Draw2D(stereoFrame_t stereoFrame)
 		// don't draw any status if dead or the scoreboard is being explicitly shown
 		if ( !cg.showScores && cg.snap->ps.stats[STAT_HEALTH] > 0 ) {
 
-			CG_DrawStatusBar();
-      
+			g_pWUI->StatusDraw();
+
 			CG_DrawAmmoWarning();
 
 			if(stereoFrame == STEREO_CENTER)
 				CG_DrawCrosshair();
 			CG_DrawCrosshairNames();
-			CG_DrawWeaponSelect();
 
 			CG_DrawHoldableItem();
 
@@ -2621,7 +2567,10 @@ void CG_DrawActive( stereoFrame_t stereoView ) {
 
 	// draw status bar and other floating elements
  	CG_Draw2D(stereoView);
-	g_pKillhistory->Draw();
+
+	g_pWUI->KillhistoryDraw();
+	g_pWUI->PickupHistoryDraw();
+	g_pWUI->WeaponSelectDraw();
 }
 
 

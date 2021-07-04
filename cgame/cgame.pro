@@ -24,9 +24,9 @@ DESTDIR = ./../debug/baseq3/
 HEADERS += \
     ../code/cgame/cg_local.h \
     ../code/cgame/cg_public.h \
+    ../code/cgame/wui.h \
     ../code/game/bg_public.h \
     ../code/qcommon/q_shared.h \
-     ../code/cgame/killhistory.h \
     ../code/qcommon/shared.h
 
 SOURCES += \
@@ -50,10 +50,14 @@ SOURCES += \
     ../code/cgame/cg_syscalls.cpp \
     ../code/cgame/cg_view.cpp \
     ../code/cgame/cg_weapons.cpp \
+    ../code/cgame/wui.cpp \
+    ../code/cgame/wui_killhistory.cpp \
+    ../code/cgame/wui_status.cpp \
+    ../code/cgame/wui_weaponselect.cpp \
     ../code/game/bg_misc.cpp \
     ../code/game/bg_pmove.cpp \
     ../code/game/bg_slidemove.cpp \
     ../code/qcommon/q_math.c \
     ../code/qcommon/q_shared.c \
-    ../code/cgame/killhistory.cpp
+    ../code/cgame/wui_itempickup.cpp
 

@@ -581,6 +581,8 @@ vm_t *VM_Create( const char *module, intptr_t (*systemCalls)(intptr_t *),
 		const char* pchWorkingDir = Sys_DefaultInstallPath();
 		const char* pchModulePath = va("%s/baseq3/" LIB_PREFIX "%s" DLL_EXT, pchWorkingDir, module);
 
+
+
 		//	Find module
 		vm->dllHandle = Sys_LoadGameDll(pchModulePath, &vm->entryPoint, VM_DllSyscall);
 

@@ -117,8 +117,8 @@ static void CG_Obituary( entityState_t *ent ) {
 	strcat( targetName, S_COLOR_WHITE );
 
 	//	Push kill event if killhistory enabled
-	if( g_pKillhistory->m_cvarEnabled.integer ) {
-		g_pKillhistory->Push(attacker, target, (meansOfDeath_t)mod );
+	if( g_pWUI->m_cvarKillhistoryEnabled.integer ) {
+		g_pWUI->KillhistoryPush(attacker, target, (meansOfDeath_t)mod );
 		return;
 	}
 
@@ -415,6 +415,9 @@ static void CG_ItemPickup( int itemNum ) {
 	cg.itemPickup = itemNum;
 	cg.itemPickupTime = cg.time;
 	cg.itemPickupBlendTime = cg.time;
+
+	g_pWUI->PickupHistoryPush( itemNum );
+
 	// see if it should be the grabbed weapon
 	if ( bg_itemlist[itemNum].giType == IT_WEAPON ) {
 		// select it immediately

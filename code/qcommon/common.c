@@ -2803,6 +2803,8 @@ void Com_Init( char *commandLine ) {
 	VM_Init();
 	SV_Init();
 
+
+
 	com_dedicated->modified = qfalse;
 #ifndef DEDICATED
 	CL_Init();

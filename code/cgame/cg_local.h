@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "../game/bg_public.h"
 #include "cg_public.h"
 
-#include "killhistory.h"
+#include "wui.h"
 
 
 // The entire cgame module is unloaded and reloaded on each level change,
@@ -1692,7 +1692,7 @@ int CG_NewParticleArea ( int num );
 /* nullFuna Changes */
 
 //	WUI:	kill history drawing
-extern WUIKillhistory*	g_pKillhistory;
+extern ClientWUI*	g_pWUI;
 
 void	WUI_DrawPanel(int x, int y, int sizex, int sizey, qhandle_t hPanel) ;
 void	WUI_DrawColorPanel(int x, int y, int sizex, int sizey, vec4_t color, qhandle_t hPanel);
