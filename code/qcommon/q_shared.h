@@ -42,7 +42,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //  #define LEGACY_PROTOCOL	// You probably don't need this for your standalone game
 #else
   #define PRODUCT_NAME				"ioq3"
-  #define BASEGAME					"baseq3"
+  #define BASEGAME					"main"
   #define CLIENT_WINDOW_TITLE		"ioquake3"
   #define CLIENT_WINDOW_MIN_TITLE	"ioq3"
   #define HOMEPATH_NAME_UNIX		".q3a"

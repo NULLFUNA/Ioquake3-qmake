@@ -577,10 +577,24 @@ vm_t *VM_Create( const char *module, intptr_t (*systemCalls)(intptr_t *),
 	//	WCL: flag to disable virtual machine loading
 	if( !null_usevm->integer ) {
 
-		//	Setup paths to module
-		const char* pchWorkingDir = Sys_DefaultInstallPath();
-		const char* pchModulePath = va("%s/baseq3/" LIB_PREFIX "%s" DLL_EXT, pchWorkingDir, module);
 
+        //	Setup paths to module
+        const char* pchWorkingDir = Sys_DefaultInstallPath();
+        const char* pchModulePath = va("%s/baseq3/" LIB_PREFIX "%s" DLL_EXT, pchWorkingDir, module);
+
+
+        //  Experimental feature:  it will be removed in the future
+        if( Cvar_Get("null-exp_newlibs", "1", CVAR_ARCHIVE | CVAR_LATCH)->integer ) {
+
+                if(!Q_stricmp(module, "cgame"))
+                    module = "client";
+
+                if(!Q_stricmp(module, "qagame"))
+                    module = "server";
+
+                pchModulePath = va("%s/bin/" LIB_PREFIX "%s" DLL_EXT, pchWorkingDir, module);
+
+        }
 
 
 		//	Find module

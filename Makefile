@@ -1003,14 +1003,14 @@ endif
 
 ifneq ($(BUILD_CLIENT),0)
   ifneq ($(USE_RENDERER_DLOPEN),0)
-    TARGETS += $(B)/$(CLIENTBIN)$(FULLBINEXT) $(B)/renderer_opengl1_$(SHLIBNAME)
+    TARGETS += $(B)/$(CLIENTBIN)$(FULLBINEXT) $(B)/bin/baserender$(SHLIBNAME)
     ifneq ($(BUILD_RENDERER_OPENGL2),0)
-      TARGETS += $(B)/renderer_opengl2_$(SHLIBNAME)
+      TARGETS += $(B)/bin/newrender$(SHLIBNAME)
     endif
   else
     TARGETS += $(B)/$(CLIENTBIN)$(FULLBINEXT)
     ifneq ($(BUILD_RENDERER_OPENGL2),0)
-      TARGETS += $(B)/$(CLIENTBIN)_opengl2$(FULLBINEXT)
+      TARGETS += $(B)/bin/newrender$(FULLBINEXT) 
     endif
   endif
 endif
@@ -1906,17 +1906,17 @@ $(B)/$(CLIENTBIN)$(): $(Q3OBJ) $(LIBSDLMAIN)
 		-o $@ $(Q3OBJ) \
 		$(LIBSDLMAIN) $(CLIENT_LIBS) $(LIBS)
 
-$(B)/renderer_opengl1_$(SHLIBNAME): $(Q3ROBJ) $(JPGOBJ)
+$(B)/bin/baserender$(SHLIBNAME): $(Q3ROBJ) $(JPGOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3ROBJ) $(JPGOBJ) \
 		$(THREAD_LIBS) $(LIBSDLMAIN) $(RENDERER_LIBS) $(LIBS)
 
-$(B)/renderer_opengl2_$(SHLIBNAME): $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ)
+$(B)/bin/newrender$(SHLIBNAME): $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ) \
 		$(THREAD_LIBS) $(LIBSDLMAIN) $(RENDERER_LIBS) $(LIBS)
 else
-#$(B)/$(CLIENTBIN)$(FULLBINEXT): $(Q3OBJ) $(Q3ROBJ) $(JPGOBJ) $(LIBSDLMAIN)
+#$(B)/$(CLIENTBIN)$(FULLBINEXT): $(Q3OBJ) $(Q3ROBJ) $(JPGOBJ) $(LIBSDLMAIN)  WCL: DISABLE SECOND RENDERER
 #	$(echo_cmd) "LD $@"
 #	$(Q)$(CC) $(CLIENT_CFLAGS) $(CFLAGS) $(CLIENT_LDFLAGS) $(LDFLAGS) $(NOTSHLIBLDFLAGS) \
                 -o $@ $(Q3OBJ) $(Q3ROBJ) $(JPGOBJ) \
@@ -1926,11 +1926,11 @@ $(B)/$(CLIENTBIN)$(FULLBINEXT): $(Q)$(CC) $(CLIENT_CFLAGS) $(CFLAGS) $(CLIENT_LD
 -o $@ $(Q3OBJ) $(Q3ROBJ) $(JPGOBJ) \
 $(LIBSDLMAIN) $(CLIENT_LIBS) $(RENDERER_LIBS) $(LIBS)
 
-$(B)/$(CLIENTBIN)_opengl2$(FULLBINEXT): $(Q3OBJ) $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ) $(LIBSDLMAIN)
+$(B)/bin/newrender$(FULLBINEXT): $(Q3OBJ) $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ) $(LIBSDLMAIN)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CLIENT_CFLAGS) $(CFLAGS) $(CLIENT_LDFLAGS) $(LDFLAGS) $(NOTSHLIBLDFLAGS) \
 		-o $@ $(Q3OBJ) $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ) \
-		$(LIBSDLMAIN) $(CLIENT_LIBS) $(RENDERER_LIBS) $(LIBS)
+		$(LIBSDLMAIN) $(CLIENT_LIBS) $(RENDERER_LIBS) $(LIBS)  WCL: DISABLE SECOND RENDERER
 endif
 
 ifneq ($(strip $(LIBSDLMAIN)),)
@@ -2237,13 +2237,13 @@ endif
 ifneq ($(BUILD_CLIENT),0)
 	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(CLIENTBIN)$(FULLBINEXT) $(COPYBINDIR)/$(CLIENTBIN)$(FULLBINEXT)
   ifneq ($(USE_RENDERER_DLOPEN),0)
-	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/renderer_opengl1_$(SHLIBNAME) $(COPYBINDIR)/renderer_opengl1_$(SHLIBNAME)
+	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/bin/baserender$(SHLIBNAME) $(COPYBINDIR)/bin/baserender$(SHLIBNAME)
     ifneq ($(BUILD_RENDERER_OPENGL2),0)
-	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/renderer_opengl2_$(SHLIBNAME) $(COPYBINDIR)/renderer_opengl2_$(SHLIBNAME)
+	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/bin/newrender$(SHLIBNAME) $(COPYBINDIR)/bin/newrender$(SHLIBNAME)
     endif
   else
     ifneq ($(BUILD_RENDERER_OPENGL2),0)
-	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(CLIENTBIN)_opengl2$(FULLBINEXT) $(COPYBINDIR)/$(CLIENTBIN)_opengl2$(FULLBINEXT)
+	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/bin/newrender$(FULLBINEXT) $(COPYBINDIR)/bin/newrender$(FULLBINEXT)
     endif
   endif
 endif

@@ -3779,7 +3779,7 @@ void FS_InitFilesystem( void ) {
 
 	//	use old pak ext cause cvar system isn't working while filesystem init
 	//	will be removed in futre
-	g_pchPakExtension = ".pk3";
+    g_pchPakExtension = ".pak";
 
 
 
@@ -3860,7 +3860,7 @@ void FS_Restart( int checksumFeed ) {
 	}
 
 	Q_strncpyz(lastValidBase, fs_basepath->string, sizeof(lastValidBase));
-	Q_strncpyz(lastValidComBaseGame, com_basegame->string, sizeof(lastValidComBaseGame));
+    Q_strncpyz(lastValidComBaseGame, com_basegame->string, sizeof(lastValidComBaseGame));
 	Q_strncpyz(lastValidFsBaseGame, fs_basegame->string, sizeof(lastValidFsBaseGame));
 	Q_strncpyz(lastValidGame, fs_gamedirvar->string, sizeof(lastValidGame));
 
