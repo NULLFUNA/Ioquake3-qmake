@@ -36,3 +36,5 @@ build/debug/unfreeze/q3history
 *.so
 *.1
 *.x86_64
+*.server
+*.client
