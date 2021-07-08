@@ -211,7 +211,7 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_autoswitch, "cg_autoswitch", "1", CVAR_ARCHIVE },
 	{ &cg_drawGun, "cg_drawGun", "1", CVAR_ARCHIVE },
 	{ &cg_zoomFov, "cg_zoomfov", "22.5", CVAR_ARCHIVE },
-	{ &cg_fov, "cg_fov", "90", CVAR_CHEAT },
+    { &cg_fov, "cg_fov", "90", CVAR_ARCHIVE },
 	{ &cg_viewsize, "cg_viewsize", "100", CVAR_ARCHIVE },
 	{ &cg_shadows, "cg_shadows", "1", CVAR_ARCHIVE  },
 	{ &cg_gibs, "cg_gibs", "1", CVAR_ARCHIVE  },
@@ -235,9 +235,9 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_addMarks, "cg_marks", "1", CVAR_ARCHIVE },
 	{ &cg_lagometer, "cg_lagometer", "1", CVAR_ARCHIVE },
 	{ &cg_railTrailTime, "cg_railTrailTime", "400", CVAR_ARCHIVE  },
-	{ &cg_gun_x, "cg_gunX", "16", CVAR_CHEAT },
-	{ &cg_gun_y, "cg_gunY", "-2", CVAR_CHEAT },
-	{ &cg_gun_z, "cg_gunZ", "-5", CVAR_CHEAT },
+    { &cg_gun_x, "cg_gunX", "16", CVAR_ARCHIVE },
+    { &cg_gun_y, "cg_gunY", "-2", CVAR_ARCHIVE },
+    { &cg_gun_z, "cg_gunZ", "-5", CVAR_ARCHIVE },
 	{ &cg_centertime, "cg_centertime", "3", CVAR_CHEAT },
 	{ &cg_runpitch, "cg_runpitch", "0.002", CVAR_ARCHIVE},
 	{ &cg_runroll, "cg_runroll", "0.005", CVAR_ARCHIVE },
@@ -264,40 +264,19 @@ static cvarTable_t cvarTable[] = {
 	{ &cg_teamChatHeight, "cg_teamChatHeight", "0", CVAR_ARCHIVE  },
 	{ &cg_forceModel, "cg_forceModel", "0", CVAR_ARCHIVE  },
 	{ &cg_predictItems, "cg_predictItems", "1", CVAR_ARCHIVE },
-#ifdef MISSIONPACK
-	{ &cg_deferPlayers, "cg_deferPlayers", "0", CVAR_ARCHIVE },
-#else
 	{ &cg_deferPlayers, "cg_deferPlayers", "1", CVAR_ARCHIVE },
-#endif
 	{ &cg_drawTeamOverlay, "cg_drawTeamOverlay", "0", CVAR_ARCHIVE },
 	{ &cg_teamOverlayUserinfo, "teamoverlay", "0", CVAR_ROM | CVAR_USERINFO },
 	{ &cg_stats, "cg_stats", "0", 0 },
 	{ &cg_drawFriend, "cg_drawFriend", "1", CVAR_ARCHIVE },
 	{ &cg_teamChatsOnly, "cg_teamChatsOnly", "0", CVAR_ARCHIVE },
-#ifdef MISSIONPACK
-	{ &cg_noVoiceChats, "cg_noVoiceChats", "0", CVAR_ARCHIVE },
-	{ &cg_noVoiceText, "cg_noVoiceText", "0", CVAR_ARCHIVE },
-#endif
+
 	// the following variables are created in other parts of the system,
 	// but we also reference them here
 	{ &cg_buildScript, "com_buildScript", "0", 0 },	// force loading of all possible data amd error on failures
 	{ &cg_paused, "cl_paused", "0", CVAR_ROM },
 	{ &cg_blood, "com_blood", "1", CVAR_ARCHIVE },
 	{ &cg_synchronousClients, "g_synchronousClients", "0", CVAR_SYSTEMINFO },
-#ifdef MISSIONPACK
-	{ &cg_redTeamName, "g_redteam", DEFAULT_REDTEAM_NAME, CVAR_ARCHIVE | CVAR_SERVERINFO | CVAR_USERINFO },
-	{ &cg_blueTeamName, "g_blueteam", DEFAULT_BLUETEAM_NAME, CVAR_ARCHIVE | CVAR_SERVERINFO | CVAR_USERINFO },
-	{ &cg_currentSelectedPlayer, "cg_currentSelectedPlayer", "0", CVAR_ARCHIVE},
-	{ &cg_currentSelectedPlayerName, "cg_currentSelectedPlayerName", "", CVAR_ARCHIVE},
-	{ &cg_singlePlayer, "ui_singlePlayerActive", "0", CVAR_USERINFO},
-	{ &cg_enableDust, "g_enableDust", "0", CVAR_SERVERINFO},
-	{ &cg_enableBreath, "g_enableBreath", "0", CVAR_SERVERINFO},
-	{ &cg_singlePlayerActive, "ui_singlePlayerActive", "0", CVAR_USERINFO},
-	{ &cg_recordSPDemo, "ui_recordSPDemo", "0", CVAR_ARCHIVE},
-	{ &cg_recordSPDemoName, "ui_recordSPDemoName", "", CVAR_ARCHIVE},
-	{ &cg_obeliskRespawnDelay, "g_obeliskRespawnDelay", "10", CVAR_SERVERINFO},
-	{ &cg_hudFiles, "cg_hudFiles", "ui/hud.txt", CVAR_ARCHIVE},
-#endif
 	{ &cg_cameraOrbit, "cg_cameraOrbit", "0", CVAR_CHEAT},
 	{ &cg_cameraOrbitDelay, "cg_cameraOrbitDelay", "50", CVAR_ARCHIVE},
 	{ &cg_timescaleFadeEnd, "cg_timescaleFadeEnd", "1", 0},
@@ -309,17 +288,12 @@ static cvarTable_t cvarTable[] = {
 
 	{ &pmove_fixed, "pmove_fixed", "0", CVAR_SYSTEMINFO},
 	{ &pmove_msec, "pmove_msec", "8", CVAR_SYSTEMINFO},
-#ifdef MISSIONPACK
-	{ &cg_smallFont, "ui_smallFont", "0.25", CVAR_ARCHIVE},
-	{ &cg_bigFont, "ui_bigFont", "0.4", CVAR_ARCHIVE},
-	{ &cg_noTaunt, "cg_noTaunt", "0", CVAR_ARCHIVE},
-#endif
+
 	{ &cg_noProjectileTrail, "cg_noProjectileTrail", "0", CVAR_ARCHIVE},
 	{ &cg_oldRail, "cg_oldRail", "1", CVAR_ARCHIVE},
 	{ &cg_oldRocket, "cg_oldRocket", "1", CVAR_ARCHIVE},
 	{ &cg_oldPlasma, "cg_oldPlasma", "1", CVAR_ARCHIVE},
 	{ &cg_trueLightning, "cg_trueLightning", "0.0", CVAR_ARCHIVE}
-//	{ &cg_pmove_fixed, "cg_pmove_fixed", "0", CVAR_USERINFO | CVAR_ARCHIVE }
 };
 
 static int  cvarTableSize = ARRAY_LEN( cvarTable );
