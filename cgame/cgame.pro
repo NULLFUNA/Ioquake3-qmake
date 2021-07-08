@@ -5,6 +5,7 @@ TEMPLATE = lib
 DEFINES += CGAME_LIBRARY
 
 CONFIG += c++11
+QMAKE_CXXFLAGS += -fpermissive
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
