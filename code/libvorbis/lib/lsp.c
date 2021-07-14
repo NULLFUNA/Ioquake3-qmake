@@ -312,7 +312,7 @@ static int Laguerre_With_Deflation(float *a,int ord,float *r){
   for(i=0;i<=ord;i++)defl[i]=a[i];
 
   for(m=ord;m>0;m--){
-    double new=0.f,delta;
+    double New=0.f,delta;
 
     /* iterate a root */
     while(1){
@@ -320,9 +320,9 @@ static int Laguerre_With_Deflation(float *a,int ord,float *r){
 
       /* eval the polynomial and its first two derivatives */
       for(i=m;i>0;i--){
-        ppp = new*ppp + pp;
-        pp  = new*pp  + p;
-        p   = new*p   + defl[i-1];
+        ppp = New*ppp + pp;
+        pp  = New*pp  + p;
+        p   = New*p   + defl[i-1];
       }
 
       /* Laguerre's method */
@@ -339,19 +339,19 @@ static int Laguerre_With_Deflation(float *a,int ord,float *r){
       }
 
       delta  = m*p/denom;
-      new   -= delta;
+      New   -= delta;
 
       if(delta<0.f)delta*=-1;
 
-      if(fabs(delta/new)<10e-12)break;
+      if(fabs(delta/New)<10e-12)break;
     }
 
-    r[m-1]=new;
+    r[m-1]=New;
 
     /* forward deflation */
 
     for(i=m;i>0;i--)
-      defl[i-1]+=new*defl[i];
+      defl[i-1]+=New*defl[i];
     defl++;
 
   }

@@ -843,9 +843,9 @@ int floor1_encode(oggpack_buffer *opb,vorbis_block *vb,
 
     /* partition by partition */
     for(i=0,j=2;i<info->partitions;i++){
-      int class=info->partitionclass[i];
-      int cdim=info->class_dim[class];
-      int csubbits=info->class_subs[class];
+      int Class=info->partitionclass[i];
+      int cdim=info->class_dim[Class];
+      int csubbits=info->class_subs[Class];
       int csub=1<<csubbits;
       int bookas[8]={0,0,0,0,0,0,0,0};
       int cval=0;
@@ -858,11 +858,11 @@ int floor1_encode(oggpack_buffer *opb,vorbis_block *vb,
                                             issues a warning without
                                             initialization */
         for(k=0;k<csub;k++){
-          int booknum=info->class_subbook[class][k];
+          int booknum=info->class_subbook[Class][k];
           if(booknum<0){
             maxval[k]=1;
           }else{
-            maxval[k]=sbooks[info->class_subbook[class][k]]->entries;
+            maxval[k]=sbooks[info->class_subbook[Class][k]]->entries;
           }
         }
         for(k=0;k<cdim;k++){
@@ -878,7 +878,7 @@ int floor1_encode(oggpack_buffer *opb,vorbis_block *vb,
         }
         /* write it */
         look->phrasebits+=
-          vorbis_book_encode(books+info->class_book[class],cval,opb);
+          vorbis_book_encode(books+info->class_book[Class],cval,opb);
 
 #ifdef TRAIN_FLOOR1
         {
@@ -895,7 +895,7 @@ int floor1_encode(oggpack_buffer *opb,vorbis_block *vb,
 
       /* write post values */
       for(k=0;k<cdim;k++){
-        int book=info->class_subbook[class][bookas[k]];
+        int book=info->class_subbook[Class][bookas[k]];
         if(book>=0){
           /* hack to allow training with 'bad' books */
           if(out[j+k]<(books+book)->entries)
@@ -969,21 +969,21 @@ static void *floor1_inverse1(vorbis_block *vb,vorbis_look_floor *in){
 
     /* partition by partition */
     for(i=0,j=2;i<info->partitions;i++){
-      int class=info->partitionclass[i];
-      int cdim=info->class_dim[class];
-      int csubbits=info->class_subs[class];
+      int Class=info->partitionclass[i];
+      int cdim=info->class_dim[Class];
+      int csubbits=info->class_subs[Class];
       int csub=1<<csubbits;
       int cval=0;
 
       /* decode the partition's first stage cascade value */
       if(csubbits){
-        cval=vorbis_book_decode(books+info->class_book[class],&vb->opb);
+        cval=vorbis_book_decode(books+info->class_book[Class],&vb->opb);
 
         if(cval==-1)goto eop;
       }
 
       for(k=0;k<cdim;k++){
-        int book=info->class_subbook[class][cval&(csub-1)];
+        int book=info->class_subbook[Class][cval&(csub-1)];
         cval>>=csubbits;
         if(book>=0){
           if((fit_value[j+k]=vorbis_book_decode(books+book,&vb->opb))==-1)

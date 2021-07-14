@@ -481,10 +481,10 @@ void RB_BeginDrawingView (void) {
 		plane[2] = backEnd.viewParms.portalPlane.normal[2];
 		plane[3] = backEnd.viewParms.portalPlane.dist;
 
-		plane2[0] = DotProduct (backEnd.viewParms.or.axis[0], plane);
-		plane2[1] = DotProduct (backEnd.viewParms.or.axis[1], plane);
-		plane2[2] = DotProduct (backEnd.viewParms.or.axis[2], plane);
-		plane2[3] = DotProduct (plane, backEnd.viewParms.or.origin) - plane[3];
+        plane2[0] = DotProduct (backEnd.viewParms.Or.axis[0], plane);
+        plane2[1] = DotProduct (backEnd.viewParms.Or.axis[1], plane);
+        plane2[2] = DotProduct (backEnd.viewParms.Or.axis[2], plane);
+        plane2[3] = DotProduct (plane, backEnd.viewParms.Or.origin) - plane[3];
 
 		qglLoadMatrixf( s_flipMatrix );
 		qglClipPlane (GL_CLIP_PLANE0, plane2);
@@ -571,11 +571,11 @@ void RB_RenderDrawSurfList( drawSurf_t *drawSurfs, int numDrawSurfs ) {
 				tess.shaderTime = backEnd.refdef.floatTime - tess.shader->timeOffset;
 
 				// set up the transformation matrix
-				R_RotateForEntity( backEnd.currentEntity, &backEnd.viewParms, &backEnd.or );
+                R_RotateForEntity( backEnd.currentEntity, &backEnd.viewParms, &backEnd.Or );
 
 				// set up the dynamic lighting if needed
 				if ( backEnd.currentEntity->needDlights ) {
-					R_TransformDlights( backEnd.refdef.num_dlights, backEnd.refdef.dlights, &backEnd.or );
+                    R_TransformDlights( backEnd.refdef.num_dlights, backEnd.refdef.dlights, &backEnd.Or );
 				}
 
 				if(backEnd.currentEntity->e.renderfx & RF_DEPTHHACK)
@@ -589,14 +589,14 @@ void RB_RenderDrawSurfList( drawSurf_t *drawSurfs, int numDrawSurfs ) {
 			} else {
 				backEnd.currentEntity = &tr.worldEntity;
 				backEnd.refdef.floatTime = originalTime;
-				backEnd.or = backEnd.viewParms.world;
+                backEnd.Or = backEnd.viewParms.world;
 				// we have to reset the shaderTime as well otherwise image animations on
 				// the world (like water) continue with the wrong frame
 				tess.shaderTime = backEnd.refdef.floatTime - tess.shader->timeOffset;
-				R_TransformDlights( backEnd.refdef.num_dlights, backEnd.refdef.dlights, &backEnd.or );
+                R_TransformDlights( backEnd.refdef.num_dlights, backEnd.refdef.dlights, &backEnd.Or );
 			}
 
-			qglLoadMatrixf( backEnd.or.modelMatrix );
+            qglLoadMatrixf( backEnd.Or.modelMatrix );
 
 			//
 			// change depthrange. Also change projection matrix so first person weapon does not look like coming
@@ -1016,7 +1016,7 @@ RB_ColorMask
 */
 const void *RB_ColorMask(const void *data)
 {
-	const colorMaskCommand_t *cmd = data;
+    const colorMaskCommand_t *cmd = ( colorMaskCommand_t* ) data;
 	
 	qglColorMask(cmd->rgba[0], cmd->rgba[1], cmd->rgba[2], cmd->rgba[3]);
 	

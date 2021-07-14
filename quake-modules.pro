@@ -1,7 +1,7 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    cgame \
-    qagame \
+    cgame/client.pro \
+    qagame/server.pro \
     ui
 

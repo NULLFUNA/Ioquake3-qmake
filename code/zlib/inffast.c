@@ -4,10 +4,11 @@
  */
 
 #include "zutil.h"
+
+cclcodebegin
 #include "inftrees.h"
 #include "inflate.h"
 #include "inffast.h"
-
 #ifndef ASMINF
 
 /* Allow machine dependent optimization for post-increment or pre-increment.
@@ -35,7 +36,7 @@
    available, an end-of-block is encountered, or a data error is encountered.
    When large enough input and output buffers are supplied to inflate(), for
    example, a 16K input buffer and a 64K output buffer, more than 95% of the
-   inflate execution time is spent in this routine.
+   inflate execution time is spent in Ths routine.
 
    Entry assumptions:
 
@@ -55,7 +56,7 @@
 
     - The maximum input bits used by a length/distance pair is 15 bits for the
       length code, 5 bits for the length extra, 15 bits for the distance code,
-      and 13 bits for the distance extra.  This totals 48 bits, or six bytes.
+      and 13 bits for the distance extra.  Ths totals 48 bits, or six bytes.
       Therefore if strm->avail_in >= 6, then there is enough input to avoid
       checking for available input while decoding.
 
@@ -64,9 +65,9 @@
       requires strm->avail_out >= 258 for each loop to avoid checking for
       output space.
  */
-void inflate_fast(strm, start)
-z_streamp strm;
-unsigned start;         /* inflate()'s starting value for strm->avail_out */
+void inflate_fast(
+z_streamp strm,
+unsigned start     ) /* inflate()'s starting value for strm->avail_out */
 {
     struct inflate_state FAR *state;
     unsigned char FAR *in;      /* local strm->next_in */
@@ -87,7 +88,7 @@ unsigned start;         /* inflate()'s starting value for strm->avail_out */
     code const FAR *dcode;      /* local strm->distcode */
     unsigned lmask;             /* mask for first level of length codes */
     unsigned dmask;             /* mask for first level of distance codes */
-    code this;                  /* retrieved table entry */
+    code Ths;                  /* retrieved table entry */
     unsigned op;                /* code bits, operation, extra bits, or */
                                 /*  window position, window bytes to copy */
     unsigned len;               /* match length, unused bytes */
@@ -101,9 +102,7 @@ unsigned start;         /* inflate()'s starting value for strm->avail_out */
     out = strm->next_out - OFF;
     beg = out - (start - strm->avail_out);
     end = out + (strm->avail_out - 257);
-#ifdef INFLATE_STRICT
-    dmax = state->dmax;
-#endif
+
     wsize = state->wsize;
     whave = state->whave;
     write = state->write;
@@ -124,20 +123,20 @@ unsigned start;         /* inflate()'s starting value for strm->avail_out */
             hold += (unsigned long)(PUP(in)) << bits;
             bits += 8;
         }
-        this = lcode[hold & lmask];
+        Ths = lcode[hold & lmask];
       dolen:
-        op = (unsigned)(this.bits);
+        op = (unsigned)(Ths.bits);
         hold >>= op;
         bits -= op;
-        op = (unsigned)(this.op);
+        op = (unsigned)(Ths.op);
         if (op == 0) {                          /* literal */
-            Tracevv((stderr, this.val >= 0x20 && this.val < 0x7f ?
+            Tracevv((stderr, Ths.val >= 0x20 && Ths.val < 0x7f ?
                     "inflate:         literal '%c'\n" :
-                    "inflate:         literal 0x%02x\n", this.val));
-            PUP(out) = (unsigned char)(this.val);
+                    "inflate:         literal 0x%02x\n", Ths.val));
+            PUP(out) = (unsigned char)(Ths.val);
         }
         else if (op & 16) {                     /* length base */
-            len = (unsigned)(this.val);
+            len = (unsigned)(Ths.val);
             op &= 15;                           /* number of extra bits */
             if (op) {
                 if (bits < op) {
@@ -155,14 +154,14 @@ unsigned start;         /* inflate()'s starting value for strm->avail_out */
                 hold += (unsigned long)(PUP(in)) << bits;
                 bits += 8;
             }
-            this = dcode[hold & dmask];
+            Ths = dcode[hold & dmask];
           dodist:
-            op = (unsigned)(this.bits);
+            op = (unsigned)(Ths.bits);
             hold >>= op;
             bits -= op;
-            op = (unsigned)(this.op);
+            op = (unsigned)(Ths.op);
             if (op & 16) {                      /* distance base */
-                dist = (unsigned)(this.val);
+                dist = (unsigned)(Ths.val);
                 op &= 15;                       /* number of extra bits */
                 if (bits < op) {
                     hold += (unsigned long)(PUP(in)) << bits;
@@ -259,7 +258,7 @@ unsigned start;         /* inflate()'s starting value for strm->avail_out */
                 }
             }
             else if ((op & 64) == 0) {          /* 2nd level distance code */
-                this = dcode[this.val + (hold & ((1U << op) - 1))];
+                Ths = dcode[Ths.val + (hold & ((1U << op) - 1))];
                 goto dodist;
             }
             else {
@@ -269,7 +268,7 @@ unsigned start;         /* inflate()'s starting value for strm->avail_out */
             }
         }
         else if ((op & 64) == 0) {              /* 2nd level length code */
-            this = lcode[this.val + (hold & ((1U << op) - 1))];
+            Ths = lcode[Ths.val + (hold & ((1U << op) - 1))];
             goto dolen;
         }
         else if (op & 32) {                     /* end-of-block */
@@ -315,3 +314,4 @@ unsigned start;         /* inflate()'s starting value for strm->avail_out */
  */
 
 #endif /* !ASMINF */
+cclcodeend

@@ -90,7 +90,11 @@ static void IN_PrintKey( const SDL_Keysym *keysym, keyNum_t key, qboolean down )
 }
 
 #define MAX_CONSOLE_KEYS 16
-
+typedef enum
+{
+    QUAKE_KEY,
+    CHARACTER
+} keyType_t;
 /*
 ===============
 IN_IsConsoleKey
@@ -103,11 +107,7 @@ static qboolean IN_IsConsoleKey( keyNum_t key, int character )
 {
 	typedef struct consoleKey_s
 	{
-		enum
-		{
-			QUAKE_KEY,
-			CHARACTER
-		} type;
+        keyType_t   type;
 
 		union
 		{

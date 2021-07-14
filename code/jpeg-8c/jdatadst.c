@@ -25,7 +25,6 @@ extern void * malloc JPP((size_t size));
 extern void free JPP((void *ptr));
 #endif
 
-
 /* Expanded data destination object for stdio output */
 
 typedef struct {

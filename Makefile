@@ -111,15 +111,15 @@ VERSION=1.36
 endif
 
 ifndef CLIENTBIN
-CLIENTBIN=ioquake3
+CLIENTBIN=rungame
 endif
 
 ifndef SERVERBIN
-SERVERBIN=ioq3ded
+SERVERBIN=runded
 endif
 
 ifndef BASEGAME
-BASEGAME=baseq3
+BASEGAME=main
 endif
 
 ifndef BASEGAME_CFLAGS
@@ -179,7 +179,7 @@ ifndef USE_CURL_DLOPEN
 endif
 
 ifndef USE_CODEC_VORBIS
-USE_CODEC_VORBIS=1
+USE_CODEC_VORBIS=0
 endif
 
 ifndef USE_CODEC_OPUS
@@ -375,7 +375,7 @@ ifneq (,$(findstring "$(PLATFORM)", "linux" "gnu_kfreebsd" "kfreebsd-gnu" "gnu")
   endif
   endif
   endif
-
+  CC=g++
   SHLIBEXT=so
   SHLIBCFLAGS=-fPIC -fvisibility=hidden
   SHLIBLDFLAGS=-shared $(LDFLAGS)
@@ -573,7 +573,7 @@ ifdef MINGW
     # Some MinGW installations define CC to cc, but don't actually provide cc,
     # so check that CC points to a real binary and use gcc if it doesn't
     ifeq ($(call bin_path, $(CC)),)
-      CC=gcc
+      CC=g++
     endif
 
   endif
@@ -901,7 +901,7 @@ else # ifeq IRIX
 
 ifeq ($(PLATFORM),sunos)
 
-  CC=gcc
+  CC=g++
   INSTALL=ginstall
   MKDIR=gmkdir -p
   COPYDIR="/usr/local/share/games/quake3"
@@ -971,12 +971,21 @@ endif #IRIX
 endif #SunOS
 
 ifndef CC
-  CC=gcc
+  CC=g++
 endif
 
 ifndef RANLIB
   RANLIB=ranlib
 endif
+
+CFLAGS += -std=c++11
+
+ifndef DISABLE_QT
+LDFLAGS += -L/usr/lib/x86_64-linux-gnu -lQt5Core
+CFLAGS += -Iopt/Qt/6.1.2/gcc_64/include/QtCore
+endif
+
+CFLAGS += -DHAVE_STDLIB_H
 
 #   WCL: add flag to pass errors
 BASE_CFLAGS += -fpermissive
@@ -990,11 +999,11 @@ endif
 TARGETS =
 
 ifndef FULLBINEXT
-  FULLBINEXT=.$(ARCH)$(BINEXT)
+  FULLBINEXT=$(BINEXT)
 endif
 
 ifndef SHLIBNAME
-  SHLIBNAME=$(ARCH).$(SHLIBEXT)
+  SHLIBNAME=.$(SHLIBEXT)
 endif
 
 ifneq ($(BUILD_SERVER),0)
@@ -1003,14 +1012,14 @@ endif
 
 ifneq ($(BUILD_CLIENT),0)
   ifneq ($(USE_RENDERER_DLOPEN),0)
-    TARGETS += $(B)/$(CLIENTBIN)$(FULLBINEXT) $(B)/renderer_opengl1_$(SHLIBNAME)
+    TARGETS += $(B)/$(CLIENTBIN)$(FULLBINEXT) $(B)/bin/baserender$(SHLIBNAME)
     ifneq ($(BUILD_RENDERER_OPENGL2),0)
-      TARGETS += $(B)/renderer_opengl2_$(SHLIBNAME)
+      #TARGETS += $(B)/bin/newrender$(SHLIBNAME)
     endif
   else
     TARGETS += $(B)/$(CLIENTBIN)$(FULLBINEXT)
     ifneq ($(BUILD_RENDERER_OPENGL2),0)
-      TARGETS += $(B)/$(CLIENTBIN)_opengl2$(FULLBINEXT)
+      #TARGETS += $(B)/bin/newrender$(FULLBINEXT) 
     endif
   endif
 endif
@@ -1054,6 +1063,8 @@ ifeq ($(NEED_OPUS),1)
   CLIENT_LIBS += $(OPUS_LIBS)
   NEED_OGG=1
 endif
+
+#CLIENT_LIBS += -lcrypto
 
 ifeq ($(USE_CODEC_VORBIS),1)
   CLIENT_CFLAGS += -DUSE_CODEC_VORBIS
@@ -1358,8 +1369,8 @@ ifneq ($(PLATFORM),darwin)
   endif
 endif
 
+
 makedirs:
-	@$(MKDIR) $(B)/autoupdater
 	@$(MKDIR) $(B)/client/opus
 	@$(MKDIR) $(B)/client/vorbis
 	@$(MKDIR) $(B)/renderergl1
@@ -1367,12 +1378,7 @@ makedirs:
 	@$(MKDIR) $(B)/renderergl2/glsl
 	@$(MKDIR) $(B)/ded
 	@$(MKDIR) $(B)/$(BASEGAME)/qcommon
-	@$(MKDIR) $(B)/$(MISSIONPACK)/qcommon
-	@$(MKDIR) $(B)/tools/asm
-	@$(MKDIR) $(B)/tools/etc
-	@$(MKDIR) $(B)/tools/rcc
-	@$(MKDIR) $(B)/tools/cpp
-	@$(MKDIR) $(B)/tools/lburg
+	@$(MKDIR) $(B)/bin
 
 
 
@@ -1905,23 +1911,23 @@ ifeq ($(USE_MUMBLE),1)
 endif
 
 ifneq ($(USE_RENDERER_DLOPEN),0)
-$(B)/$(CLIENTBIN)$(FULLBINEXT): $(Q3OBJ) $(LIBSDLMAIN)
+$(B)/$(CLIENTBIN)$(): $(Q3OBJ) $(LIBSDLMAIN)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CLIENT_CFLAGS) $(CFLAGS) $(CLIENT_LDFLAGS) $(LDFLAGS) $(NOTSHLIBLDFLAGS) \
 		-o $@ $(Q3OBJ) \
 		$(LIBSDLMAIN) $(CLIENT_LIBS) $(LIBS)
 
-$(B)/renderer_opengl1_$(SHLIBNAME): $(Q3ROBJ) $(JPGOBJ)
+$(B)/bin/baserender$(SHLIBNAME): $(Q3ROBJ) $(JPGOBJ)
 	$(echo_cmd) "LD $@"
 	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3ROBJ) $(JPGOBJ) \
 		$(THREAD_LIBS) $(LIBSDLMAIN) $(RENDERER_LIBS) $(LIBS)
 
-$(B)/renderer_opengl2_$(SHLIBNAME): $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ)
-	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ) \
-		$(THREAD_LIBS) $(LIBSDLMAIN) $(RENDERER_LIBS) $(LIBS)
+#$(B)/ bin/newrender$(SHLIBNAME): $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ)
+	#$(echo_cmd) "LD $@"
+	#$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ) \
+	#	$(THREAD_LIBS) $(LIBSDLMAIN) $(RENDERER_LIBS) $(LIBS)
 else
-#$(B)/$(CLIENTBIN)$(FULLBINEXT): $(Q3OBJ) $(Q3ROBJ) $(JPGOBJ) $(LIBSDLMAIN)
+#$(B)/$(CLIENTBIN)$(FULLBINEXT): $(Q3OBJ) $(Q3ROBJ) $(JPGOBJ) $(LIBSDLMAIN)  WCL: DISABLE SECOND RENDERER
 #	$(echo_cmd) "LD $@"
 #	$(Q)$(CC) $(CLIENT_CFLAGS) $(CFLAGS) $(CLIENT_LDFLAGS) $(LDFLAGS) $(NOTSHLIBLDFLAGS) \
                 -o $@ $(Q3OBJ) $(Q3ROBJ) $(JPGOBJ) \
@@ -1931,11 +1937,11 @@ $(B)/$(CLIENTBIN)$(FULLBINEXT): $(Q)$(CC) $(CLIENT_CFLAGS) $(CFLAGS) $(CLIENT_LD
 -o $@ $(Q3OBJ) $(Q3ROBJ) $(JPGOBJ) \
 $(LIBSDLMAIN) $(CLIENT_LIBS) $(RENDERER_LIBS) $(LIBS)
 
-$(B)/$(CLIENTBIN)_opengl2$(FULLBINEXT): $(Q3OBJ) $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ) $(LIBSDLMAIN)
-	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(CLIENT_CFLAGS) $(CFLAGS) $(CLIENT_LDFLAGS) $(LDFLAGS) $(NOTSHLIBLDFLAGS) \
-		-o $@ $(Q3OBJ) $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ) \
-		$(LIBSDLMAIN) $(CLIENT_LIBS) $(RENDERER_LIBS) $(LIBS)
+$(B)/#bin/newrender$(FULLBINEXT): $(Q3OBJ) $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ) $(LIBSDLMAIN)
+	##$(echo_cmd) "LD $@"
+	#$(Q)$(CC) $(CLIENT_CFLAGS) $(CFLAGS) $(CLIENT_LDFLAGS) $(LDFLAGS) $(NOTSHLIBLDFLAGS) \
+	#	-o $@ $(Q3OBJ) $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ) \
+	#	$(LIBSDLMAIN) $(CLIENT_LIBS) $(RENDERER_LIBS) $(LIBS)  WCL: DISABLE SECOND RENDERER
 endif
 
 ifneq ($(strip $(LIBSDLMAIN)),)
@@ -2242,13 +2248,13 @@ endif
 ifneq ($(BUILD_CLIENT),0)
 	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(CLIENTBIN)$(FULLBINEXT) $(COPYBINDIR)/$(CLIENTBIN)$(FULLBINEXT)
   ifneq ($(USE_RENDERER_DLOPEN),0)
-	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/renderer_opengl1_$(SHLIBNAME) $(COPYBINDIR)/renderer_opengl1_$(SHLIBNAME)
+	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/bin/baserender$(SHLIBNAME) $(COPYBINDIR)/bin/baserender$(SHLIBNAME)
     ifneq ($(BUILD_RENDERER_OPENGL2),0)
-	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/renderer_opengl2_$(SHLIBNAME) $(COPYBINDIR)/renderer_opengl2_$(SHLIBNAME)
+	#$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/bin/newrender$(SHLIBNAME) $(COPYBINDIR)/bin/newrender$(SHLIBNAME)
     endif
   else
     ifneq ($(BUILD_RENDERER_OPENGL2),0)
-	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/$(CLIENTBIN)_opengl2$(FULLBINEXT) $(COPYBINDIR)/$(CLIENTBIN)_opengl2$(FULLBINEXT)
+	#$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/bin/newrender$(FULLBINEXT) $(COPYBINDIR)/bin/newrender$(FULLBINEXT)
     endif
   endif
 endif

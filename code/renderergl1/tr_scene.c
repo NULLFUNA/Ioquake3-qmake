@@ -392,10 +392,10 @@ void RE_RenderScene( const refdef_t *fd ) {
 	
 	parms.stereoFrame = tr.refdef.stereoFrame;
 
-	VectorCopy( fd->vieworg, parms.or.origin );
-	VectorCopy( fd->viewaxis[0], parms.or.axis[0] );
-	VectorCopy( fd->viewaxis[1], parms.or.axis[1] );
-	VectorCopy( fd->viewaxis[2], parms.or.axis[2] );
+    VectorCopy( fd->vieworg, parms.Or.origin );
+    VectorCopy( fd->viewaxis[0], parms.Or.axis[0] );
+    VectorCopy( fd->viewaxis[1], parms.Or.axis[1] );
+    VectorCopy( fd->viewaxis[2], parms.Or.axis[2] );
 
 	VectorCopy( fd->vieworg, parms.pvsOrigin );
 

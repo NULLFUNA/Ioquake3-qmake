@@ -351,14 +351,14 @@ static int local_book_besterror(codebook *book,int *a){
     int maxval = book->minval + book->delta*(book->quantvals-1);
     for(i=0;i<book->entries;i++){
       if(c->lengthlist[i]>0){
-        int this=0;
+        int This=0;
         for(j=0;j<dim;j++){
           int val=(e[j]-a[j]);
-          this+=val*val;
+          This+=val*val;
         }
-        if(best==-1 || this<best){
+        if(best==-1 || This<best){
           memcpy(p,e,sizeof(p));
-          best=this;
+          best=This;
           index=i;
         }
       }

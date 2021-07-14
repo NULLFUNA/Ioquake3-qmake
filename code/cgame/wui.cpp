@@ -10,12 +10,17 @@
 
 ClientWUI* g_pWUI;
 
+//  EXPERIMENTAL FEATURE
+vmCvar_t       g_cvarWUINoPack;
+
 void ClientWUI::Initiliaze() {
 
 	//	Register ConVars
 	trap_Cvar_Register( &this->m_cvarKillhistoryEnabled, "wui_khistory", "1", CVAR_ARCHIVE );
 	trap_Cvar_Register( &this->m_cvarKillhistoryMax, "wui_khistory_max", "5", CVAR_ARCHIVE );
 
+    //  EXPERIMENTAL FEATURE
+    trap_Cvar_Register( &g_cvarWUINoPack, "null-exp_wuinopack", "0", CVAR_ARCHIVE | CVAR_LATCH  );
 
 	/* ----------------------------------------------------------------------------------------------------------------------- */
 
@@ -52,6 +57,33 @@ void ClientWUI::Initiliaze() {
 	this->m_hPanel						= trap_R_RegisterShader("wui/panel.tga");
 	this->m_hRoundedPanel				= trap_R_RegisterShader("wui/roundedpanel.tga");
 	this->m_hUnderline					= trap_R_RegisterShader("wui/underline.tga");
+
+    //  EXPERIMENTAL FEATURE
+    if( g_cvarWUINoPack.integer ) {
+
+        //  load assests from
+        //  id_misc_000.pak
+
+        this->m_lIcons[MOD_BFG]				= this->m_lIcons[MOD_BFG_SPLASH]		= trap_R_RegisterShader( "icons/iconw_bfg.tga" );
+        this->m_lIcons[MOD_ROCKET]			= this->m_lIcons[MOD_ROCKET_SPLASH]		= trap_R_RegisterShader( "icons/iconw_rocket.tga" );
+        this->m_lIcons[MOD_GRENADE]			= this->m_lIcons[MOD_GRENADE_SPLASH]	= trap_R_RegisterShader( "icons/iconw_grenade.tga" );
+        this->m_lIcons[MOD_PLASMA]			= this->m_lIcons[MOD_PLASMA_SPLASH]		= trap_R_RegisterShader( "icons/iconw_plasma.tga" );
+        this->m_lIcons[MOD_SHOTGUN]			= this->m_lIcons[MOD_GRENADE_SPLASH]	= trap_R_RegisterShader( "icons/iconw_shotgun.tga" );
+        this->m_lIcons[MOD_GAUNTLET]		= this->m_lIcons[MOD_GRENADE_SPLASH]	= trap_R_RegisterShader( "icons/iconw_gauntlet.tga" );
+        this->m_lIcons[MOD_MACHINEGUN]		= this->m_lIcons[MOD_GRENADE_SPLASH]	= trap_R_RegisterShader( "icons/iconw_machinegun.tga" );
+        this->m_lIcons[MOD_RAILGUN]			= this->m_lIcons[MOD_GRENADE_SPLASH]	= trap_R_RegisterShader( "icons/iconw_railgun.tga" );
+        this->m_lIcons[MOD_LIGHTNING]		= this->m_lIcons[MOD_GRENADE_SPLASH]	= trap_R_RegisterShader( "icons/iconw_lightning.tga" );
+        this->m_lIcons[MOD_GRAPPLE]			= this->m_lIcons[MOD_GRENADE_SPLASH]	= trap_R_RegisterShader( "icons/iconw_grapple.tga" );
+        this->m_lIcons[MOD_FALLING]			= this->m_lIcons[MOD_TRIGGER_HURT]		=
+        this->m_lIcons[MOD_CRUSH]			= this->m_lIcons[MOD_TARGET_LASER]		= trap_R_RegisterShader( "icons/noammo.tga" );
+        this->m_lIcons[MOD_UNKNOWN]			= this->m_lIcons[MOD_WATER]				=
+        this->m_lIcons[MOD_SLIME]			= this->m_lIcons[MOD_LAVA]				=
+        this->m_lIcons[MOD_TELEFRAG]		= this->m_lIcons[MOD_SUICIDE]			= trap_R_RegisterShader( "icons/noammo.tga" );
+        this->m_hQuad						= trap_R_RegisterShader("icons/quad.tga");
+        this->m_hPanel						= trap_R_RegisterShader("gfx/2d/colorbar.jpg");
+        this->m_hRoundedPanel				= trap_R_RegisterShader("gfx/2d/colorbar.jpg");
+        this->m_hUnderline					= trap_R_RegisterShader("gfx/2d/colorbar.jpg");
+    }
 
 }
 

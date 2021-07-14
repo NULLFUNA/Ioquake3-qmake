@@ -3206,13 +3206,16 @@ void CL_InitRef( void ) {
 
 	//	WCL:	can switch renderer
 	null_baserender = Cvar_Get("null_baserender", "0", CVAR_ARCHIVE | CVAR_LATCH);
-	const char*	pchRenderer = "opengl2";
 
+    const char*	pchRenderer = "newrender";
 	if( null_baserender->integer )
-		pchRenderer = "opengl1";
+        pchRenderer = "baserender";
 
-	Com_sprintf(dllName, sizeof(dllName), "renderer_%s_" ARCH_STRING DLL_EXT, pchRenderer);
-	rendererLib = Sys_LoadDll(dllName, qfalse);
+    //	Setup paths to module
+    const char* pchWorkingDir = Sys_DefaultInstallPath();
+    const char* pchModulePath = va("%s/bin/%s" DLL_EXT, pchWorkingDir, pchRenderer);  //	Setup paths to module
+
+    rendererLib = Sys_LoadDll( pchModulePath, qfalse );
 	if(!rendererLib)
 	{
 		Com_Printf("failed:\n\"%s\"\n", Sys_LibraryError());

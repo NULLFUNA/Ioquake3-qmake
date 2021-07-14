@@ -2549,7 +2549,7 @@ int	FS_GetModList( char *listbuf, int bufsize ) {
 
 			for (k = 0; k < nDirs; k++) {
 				// we only want to count directories ending with ".pk3dir"
-				if (FS_IsExt(pDirs[k], ".pk3dir", strlen(pDirs[k]))) {
+                if (FS_IsExt(pDirs[k], ".pk3", strlen(pDirs[k]))) {
 					nPakDirs++;
 				}
 			}
@@ -2967,7 +2967,7 @@ void FS_AddGameDirectory( const char *path, const char *dir ) {
 			// The next .pk3dir is before the next .pk3 file
 			// But wait, this could be any directory, we're filtering to only ending with ".pk3dir" here.
 			len = strlen(pakdirs[pakdirsi]);
-			if (!FS_IsExt(pakdirs[pakdirsi], ".pk3dir", len)) {
+            if (!FS_IsExt(pakdirs[pakdirsi], ".pk3", len)) {
 				// This isn't a .pk3dir! Next!
 				pakdirsi++;
 				continue;
@@ -2980,8 +2980,8 @@ void FS_AddGameDirectory( const char *path, const char *dir ) {
 			search->dir = Z_Malloc(sizeof(*search->dir));
 
 			Q_strncpyz(search->dir->path, curpath, sizeof(search->dir->path));	// c:\quake3\baseq3
-			Q_strncpyz(search->dir->fullpath, pakfile, sizeof(search->dir->fullpath));	// c:\quake3\baseq3\mypak.pk3dir
-			Q_strncpyz(search->dir->gamedir, pakdirs[pakdirsi], sizeof(search->dir->gamedir)); // mypak.pk3dir
+            Q_strncpyz(search->dir->fullpath, pakfile, sizeof(search->dir->fullpath));	// c:\quake3\baseq3\mypak.pk3
+            Q_strncpyz(search->dir->gamedir, pakdirs[pakdirsi], sizeof(search->dir->gamedir)); // mypak.pk3
 
 			search->next = fs_searchpaths;
 			fs_searchpaths = search;
@@ -3142,12 +3142,12 @@ qboolean FS_ComparePaks( char *neededpaks, int len, qboolean dlstring ) {
 				// Remote name
 				Q_strcat( neededpaks, len, "@");
 				Q_strcat( neededpaks, len, fs_serverReferencedPakNames[i] );
-				Q_strcat( neededpaks, len, g_pchPakExtension );
+                Q_strcat( neededpaks, len, ".pk3" );
 
 				// Local name
 				Q_strcat( neededpaks, len, "@");
 				// Do we have one with the same name?
-				if ( FS_SV_FileExists( va( "%s%s", fs_serverReferencedPakNames[i], g_pchPakExtension ) ) )
+                if ( FS_SV_FileExists( va( "%s%s", fs_serverReferencedPakNames[i], ".pak" ) ) )
 				{
 					char st[MAX_ZPATH];
 					// We already have one called this, we need to download it to another name
@@ -3158,7 +3158,7 @@ qboolean FS_ComparePaks( char *neededpaks, int len, qboolean dlstring ) {
 				else
 				{
 					Q_strcat( neededpaks, len, fs_serverReferencedPakNames[i] );
-					Q_strcat( neededpaks, len, g_pchPakExtension );
+                    Q_strcat( neededpaks, len, ".pk3" );
 				}
 
 				// Find out whether it might have overflowed the buffer and don't add this file to the
@@ -3172,9 +3172,9 @@ qboolean FS_ComparePaks( char *neededpaks, int len, qboolean dlstring ) {
 			else
 			{
 				Q_strcat( neededpaks, len, fs_serverReferencedPakNames[i] );
-				Q_strcat( neededpaks, len, g_pchPakExtension );
+                Q_strcat( neededpaks, len, ".pk3" );
 				// Do we have one with the same name?
-				if ( FS_SV_FileExists( va( "%s%s", fs_serverReferencedPakNames[i], g_pchPakExtension ) ) )
+                if ( FS_SV_FileExists( va( "%s%s", fs_serverReferencedPakNames[i], ".pak" ) ) )
 				{
 					Q_strcat( neededpaks, len, " (local file exists with wrong checksum)");
 				}
@@ -3769,19 +3769,6 @@ void FS_InitFilesystem( void ) {
 	if(!FS_FilenameCompare(Cvar_VariableString("fs_game"), com_basegame->string))
 		Cvar_Set("fs_game", "");
 
-	//	WCL: new pak extension
-	null_newpaks = Cvar_Get("null_newpaks", "1", CVAR_ARCHIVE  );
-
-	//if( null_newpaks->integer )
-	//	g_pchPakExtension = ".pak";
-	//else
-	//	g_pchPakExtension = ".pk3";
-
-	//	use old pak ext cause cvar system isn't working while filesystem init
-	//	will be removed in futre
-	g_pchPakExtension = ".pk3";
-
-
 
 	// try to start up normally
 	FS_Startup(com_basegame->string);
@@ -3860,7 +3847,7 @@ void FS_Restart( int checksumFeed ) {
 	}
 
 	Q_strncpyz(lastValidBase, fs_basepath->string, sizeof(lastValidBase));
-	Q_strncpyz(lastValidComBaseGame, com_basegame->string, sizeof(lastValidComBaseGame));
+    Q_strncpyz(lastValidComBaseGame, com_basegame->string, sizeof(lastValidComBaseGame));
 	Q_strncpyz(lastValidFsBaseGame, fs_basegame->string, sizeof(lastValidFsBaseGame));
 	Q_strncpyz(lastValidGame, fs_gamedirvar->string, sizeof(lastValidGame));
 
