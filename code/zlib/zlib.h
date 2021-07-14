@@ -35,6 +35,13 @@
 
 #ifdef __cplusplus
 extern "C" {
+#define cclcodebegin    extern "C" {
+#define cclcodeend      }
+#else
+
+#define cclcodebegin
+#define cclcodeend
+
 #endif
 
 #define ZLIB_VERSION "1.2.3"

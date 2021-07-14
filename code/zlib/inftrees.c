@@ -4,6 +4,7 @@
  */
 
 #include "zutil.h"
+cclcodebegin
 #include "inftrees.h"
 
 #define MAXBITS 15
@@ -13,7 +14,7 @@ const char inflate_copyright[] =
 /*
   If you use the zlib library in a product, an acknowledgment is welcome
   in the documentation of your product. If for some reason you cannot
-  include such an acknowledgment, I would appreciate that you keep this
+  include such an acknowledgment, I would appreciate that you keep Ths
   copyright string in the executable of your product.
  */
 
@@ -29,13 +30,13 @@ const char inflate_copyright[] =
    table index bits.  It will differ if the request is greater than the
    longest code or if it is less than the shortest code.
  */
-int inflate_table(type, lens, codes, table, bits, work)
-codetype type;
-unsigned short FAR *lens;
-unsigned codes;
-code FAR * FAR *table;
-unsigned FAR *bits;
-unsigned short FAR *work;
+int inflate_table(
+codetype type,
+unsigned short FAR *lens,
+unsigned codes,
+code FAR * FAR *table,
+unsigned FAR *bits,
+unsigned short FAR *work)
 {
     unsigned len;               /* a code's length in bits */
     unsigned sym;               /* index of code symbols */
@@ -50,7 +51,7 @@ unsigned short FAR *work;
     unsigned fill;              /* index for replicating entries */
     unsigned low;               /* low bits for current root entry */
     unsigned mask;              /* mask for low root bits */
-    code this;                  /* table entry for duplication */
+    code Ths;                  /* table entry for duplication */
     code FAR *next;             /* next available space in table */
     const unsigned short FAR *base;     /* base value table to use */
     const unsigned short FAR *extra;    /* extra bits table to use */
@@ -85,10 +86,10 @@ unsigned short FAR *work;
        decoding tables are built in the large loop below, the integer codes
        are incremented backwards.
 
-       This routine assumes, but does not check, that all of the entries in
-       lens[] are in the range 0..MAXBITS.  The caller must assure this.
+       Ths routine assumes, but does not check, that all of the entries in
+       lens[] are in the range 0..MAXBITS.  The caller must assure Ths.
        1..MAXBITS is interpreted as that code length.  zero means that that
-       symbol does not occur in this code.
+       symbol does not occur in Ths code.
 
        The codes are sorted by computing a count of codes for each length,
        creating from that a table of starting indices for each length in the
@@ -115,11 +116,11 @@ unsigned short FAR *work;
         if (count[max] != 0) break;
     if (root > max) root = max;
     if (max == 0) {                     /* no symbols to code at all */
-        this.op = (unsigned char)64;    /* invalid code marker */
-        this.bits = (unsigned char)1;
-        this.val = (unsigned short)0;
-        *(*table)++ = this;             /* make a table to force an error */
-        *(*table)++ = this;
+        Ths.op = (unsigned char)64;    /* invalid code marker */
+        Ths.bits = (unsigned char)1;
+        Ths.val = (unsigned short)0;
+        *(*table)++ = Ths;             /* make a table to force an error */
+        *(*table)++ = Ths;
         *bits = 1;
         return 0;     /* no symbols, but wait for decoding to report error */
     }
@@ -147,7 +148,7 @@ unsigned short FAR *work;
         if (lens[sym] != 0) work[offs[lens[sym]]++] = (unsigned short)sym;
 
     /*
-       Create and fill in decoding tables.  In this loop, the table being
+       Create and fill in decoding tables.  In Ths loop, the table being
        filled is at next and has curr index bits.  The code being used is huff
        with length len.  That code is converted to an index by dropping drop
        bits off of the bottom.  For codes where len is less than drop + curr,
@@ -156,25 +157,25 @@ unsigned short FAR *work;
 
        root is the number of index bits for the root table.  When len exceeds
        root, sub-tables are created pointed to by the root entry with an index
-       of the low root bits of huff.  This is saved in low to check for when a
+       of the low root bits of huff.  Ths is saved in low to check for when a
        new sub-table should be started.  drop is zero when the root table is
        being filled, and drop is root when sub-tables are being filled.
 
        When a new sub-table is needed, it is necessary to look ahead in the
        code lengths to determine what size sub-table is needed.  The length
-       counts are used for this, and so count[] is decremented as codes are
+       counts are used for Ths, and so count[] is decremented as codes are
        entered in the tables.
 
        used keeps track of how many table entries have been allocated from the
        provided *table space.  It is checked when a LENS table is being made
        against the space in *table, ENOUGH, minus the maximum space needed by
-       the worst case distance code, MAXD.  This should never happen, but the
+       the worst case distance code, MAXD.  Ths should never happen, but the
        sufficiency of ENOUGH has not been proven exhaustively, hence the check.
-       This assumes that when type == LENS, bits == 9.
+       Ths assumes that when type == LENS, bits == 9.
 
        sym increments through all symbols, and the loop terminates when
-       all codes of length max, i.e. all codes, have been processed.  This
-       routine permits incomplete codes, so another loop after this one fills
+       all codes of length max, i.e. all codes, have been processed.  Ths
+       routine permits incomplete codes, so another loop after Ths one fills
        in the rest of the decoding tables with invalid code markers.
      */
 
@@ -215,18 +216,18 @@ unsigned short FAR *work;
     /* process all codes and make table entries */
     for (;;) {
         /* create table entry */
-        this.bits = (unsigned char)(len - drop);
+        Ths.bits = (unsigned char)(len - drop);
         if ((int)(work[sym]) < end) {
-            this.op = (unsigned char)0;
-            this.val = work[sym];
+            Ths.op = (unsigned char)0;
+            Ths.val = work[sym];
         }
         else if ((int)(work[sym]) > end) {
-            this.op = (unsigned char)(extra[work[sym]]);
-            this.val = base[work[sym]];
+            Ths.op = (unsigned char)(extra[work[sym]]);
+            Ths.val = base[work[sym]];
         }
         else {
-            this.op = (unsigned char)(32 + 64);         /* end of block */
-            this.val = 0;
+            Ths.op = (unsigned char)(32 + 64);         /* end of block */
+            Ths.val = 0;
         }
 
         /* replicate for those indices with low len bits equal to huff */
@@ -235,7 +236,7 @@ unsigned short FAR *work;
         min = fill;                 /* save offset to next table */
         do {
             fill -= incr;
-            next[(huff >> drop) + fill] = this;
+            next[(huff >> drop) + fill] = Ths;
         } while (fill != 0);
 
         /* backwards increment the len-bit code huff */
@@ -289,26 +290,26 @@ unsigned short FAR *work;
     }
 
     /*
-       Fill in rest of table for incomplete codes.  This loop is similar to the
+       Fill in rest of table for incomplete codes.  Ths loop is similar to the
        loop above in incrementing huff for table indices.  It is assumed that
        len is equal to curr + drop, so there is no loop needed to increment
        through high index bits.  When the current sub-table is filled, the loop
        drops back to the root table to fill in any remaining entries there.
      */
-    this.op = (unsigned char)64;                /* invalid code marker */
-    this.bits = (unsigned char)(len - drop);
-    this.val = (unsigned short)0;
+    Ths.op = (unsigned char)64;                /* invalid code marker */
+    Ths.bits = (unsigned char)(len - drop);
+    Ths.val = (unsigned short)0;
     while (huff != 0) {
         /* when done with sub-table, drop back to root table */
         if (drop != 0 && (huff & mask) != low) {
             drop = 0;
             len = root;
             next = *table;
-            this.bits = (unsigned char)len;
+            Ths.bits = (unsigned char)len;
         }
 
         /* put invalid code marker in table */
-        next[huff >> drop] = this;
+        next[huff >> drop] = Ths;
 
         /* backwards increment the len-bit code huff */
         incr = 1U << (len - 1);
@@ -327,3 +328,5 @@ unsigned short FAR *work;
     *bits = root;
     return 0;
 }
+
+cclcodeend

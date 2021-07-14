@@ -671,7 +671,7 @@ static int mapping0_forward(vorbis_block *vb){
         }
 
         classifications=_residue_P[ci->residue_type[resnum]]->
-          class(vb,b->residue[resnum],couple_bundle,zerobundle,ch_in_bundle);
+          Class(vb,b->residue[resnum],couple_bundle,zerobundle,ch_in_bundle);
 
         ch_in_bundle=0;
         for(j=0;j<vi->channels;j++)

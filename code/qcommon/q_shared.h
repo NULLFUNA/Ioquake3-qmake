@@ -75,7 +75,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #  define PRODUCT_DATE __DATE__
 #endif
 
-#define Q3_VERSION "ioquake3 1.36 + QT Creator"
+#if __cplusplus
+#define Q3_VERSION "ioq3 G++ + QT"
+#else
+#define Q3_VERSION "ioq3 GCC + QT"
+#endif
 
 #define MAX_TEAMNAME		32
 #define MAX_MASTER_SERVERS      5	// number of supported master servers
@@ -163,16 +167,23 @@ typedef int intptr_t;
 
 #else
 
+extern "C" {
+
 #include <assert.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
 #include <stddef.h>
-#include <stdlib.h>
+
+#include <cstdlib>
+using namespace std;
+
 #include <time.h>
 #include <ctype.h>
 #include <limits.h>
+
+}
 
 #ifdef _MSC_VER
   #include <io.h>

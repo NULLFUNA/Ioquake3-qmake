@@ -179,7 +179,7 @@ ifndef USE_CURL_DLOPEN
 endif
 
 ifndef USE_CODEC_VORBIS
-USE_CODEC_VORBIS=1
+USE_CODEC_VORBIS=0
 endif
 
 ifndef USE_CODEC_OPUS
@@ -375,7 +375,7 @@ ifneq (,$(findstring "$(PLATFORM)", "linux" "gnu_kfreebsd" "kfreebsd-gnu" "gnu")
   endif
   endif
   endif
-
+  CC=g++
   SHLIBEXT=so
   SHLIBCFLAGS=-fPIC -fvisibility=hidden
   SHLIBLDFLAGS=-shared $(LDFLAGS)
@@ -573,7 +573,7 @@ ifdef MINGW
     # Some MinGW installations define CC to cc, but don't actually provide cc,
     # so check that CC points to a real binary and use gcc if it doesn't
     ifeq ($(call bin_path, $(CC)),)
-      CC=gcc
+      CC=g++
     endif
 
   endif
@@ -901,7 +901,7 @@ else # ifeq IRIX
 
 ifeq ($(PLATFORM),sunos)
 
-  CC=gcc
+  CC=g++
   INSTALL=ginstall
   MKDIR=gmkdir -p
   COPYDIR="/usr/local/share/games/quake3"
@@ -971,12 +971,21 @@ endif #IRIX
 endif #SunOS
 
 ifndef CC
-  CC=gcc
+  CC=g++
 endif
 
 ifndef RANLIB
   RANLIB=ranlib
 endif
+
+CFLAGS += -std=c++11
+
+ifndef DISABLE_QT
+LDFLAGS += -L/usr/lib/x86_64-linux-gnu -lQt5Core
+CFLAGS += -Iopt/Qt/6.1.2/gcc_64/include/QtCore
+endif
+
+CFLAGS += -DHAVE_STDLIB_H
 
 #   WCL: add flag to pass errors
 BASE_CFLAGS += -fpermissive
@@ -1005,12 +1014,12 @@ ifneq ($(BUILD_CLIENT),0)
   ifneq ($(USE_RENDERER_DLOPEN),0)
     TARGETS += $(B)/$(CLIENTBIN)$(FULLBINEXT) $(B)/bin/baserender$(SHLIBNAME)
     ifneq ($(BUILD_RENDERER_OPENGL2),0)
-      TARGETS += $(B)/bin/newrender$(SHLIBNAME)
+      #TARGETS += $(B)/bin/newrender$(SHLIBNAME)
     endif
   else
     TARGETS += $(B)/$(CLIENTBIN)$(FULLBINEXT)
     ifneq ($(BUILD_RENDERER_OPENGL2),0)
-      TARGETS += $(B)/bin/newrender$(FULLBINEXT) 
+      #TARGETS += $(B)/bin/newrender$(FULLBINEXT) 
     endif
   endif
 endif
@@ -1054,6 +1063,8 @@ ifeq ($(NEED_OPUS),1)
   CLIENT_LIBS += $(OPUS_LIBS)
   NEED_OGG=1
 endif
+
+#CLIENT_LIBS += -lcrypto
 
 ifeq ($(USE_CODEC_VORBIS),1)
   CLIENT_CFLAGS += -DUSE_CODEC_VORBIS
@@ -1911,10 +1922,10 @@ $(B)/bin/baserender$(SHLIBNAME): $(Q3ROBJ) $(JPGOBJ)
 	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3ROBJ) $(JPGOBJ) \
 		$(THREAD_LIBS) $(LIBSDLMAIN) $(RENDERER_LIBS) $(LIBS)
 
-$(B)/bin/newrender$(SHLIBNAME): $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ)
-	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ) \
-		$(THREAD_LIBS) $(LIBSDLMAIN) $(RENDERER_LIBS) $(LIBS)
+#$(B)/ bin/newrender$(SHLIBNAME): $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ)
+	#$(echo_cmd) "LD $@"
+	#$(Q)$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ) \
+	#	$(THREAD_LIBS) $(LIBSDLMAIN) $(RENDERER_LIBS) $(LIBS)
 else
 #$(B)/$(CLIENTBIN)$(FULLBINEXT): $(Q3OBJ) $(Q3ROBJ) $(JPGOBJ) $(LIBSDLMAIN)  WCL: DISABLE SECOND RENDERER
 #	$(echo_cmd) "LD $@"
@@ -1926,11 +1937,11 @@ $(B)/$(CLIENTBIN)$(FULLBINEXT): $(Q)$(CC) $(CLIENT_CFLAGS) $(CFLAGS) $(CLIENT_LD
 -o $@ $(Q3OBJ) $(Q3ROBJ) $(JPGOBJ) \
 $(LIBSDLMAIN) $(CLIENT_LIBS) $(RENDERER_LIBS) $(LIBS)
 
-$(B)/bin/newrender$(FULLBINEXT): $(Q3OBJ) $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ) $(LIBSDLMAIN)
-	$(echo_cmd) "LD $@"
-	$(Q)$(CC) $(CLIENT_CFLAGS) $(CFLAGS) $(CLIENT_LDFLAGS) $(LDFLAGS) $(NOTSHLIBLDFLAGS) \
-		-o $@ $(Q3OBJ) $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ) \
-		$(LIBSDLMAIN) $(CLIENT_LIBS) $(RENDERER_LIBS) $(LIBS)  WCL: DISABLE SECOND RENDERER
+$(B)/#bin/newrender$(FULLBINEXT): $(Q3OBJ) $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ) $(LIBSDLMAIN)
+	##$(echo_cmd) "LD $@"
+	#$(Q)$(CC) $(CLIENT_CFLAGS) $(CFLAGS) $(CLIENT_LDFLAGS) $(LDFLAGS) $(NOTSHLIBLDFLAGS) \
+	#	-o $@ $(Q3OBJ) $(Q3R2OBJ) $(Q3R2STRINGOBJ) $(JPGOBJ) \
+	#	$(LIBSDLMAIN) $(CLIENT_LIBS) $(RENDERER_LIBS) $(LIBS)  WCL: DISABLE SECOND RENDERER
 endif
 
 ifneq ($(strip $(LIBSDLMAIN)),)
@@ -2239,11 +2250,11 @@ ifneq ($(BUILD_CLIENT),0)
   ifneq ($(USE_RENDERER_DLOPEN),0)
 	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/bin/baserender$(SHLIBNAME) $(COPYBINDIR)/bin/baserender$(SHLIBNAME)
     ifneq ($(BUILD_RENDERER_OPENGL2),0)
-	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/bin/newrender$(SHLIBNAME) $(COPYBINDIR)/bin/newrender$(SHLIBNAME)
+	#$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/bin/newrender$(SHLIBNAME) $(COPYBINDIR)/bin/newrender$(SHLIBNAME)
     endif
   else
     ifneq ($(BUILD_RENDERER_OPENGL2),0)
-	$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/bin/newrender$(FULLBINEXT) $(COPYBINDIR)/bin/newrender$(FULLBINEXT)
+	#$(INSTALL) $(STRIP_FLAG) -m 0755 $(BR)/bin/newrender$(FULLBINEXT) $(COPYBINDIR)/bin/newrender$(FULLBINEXT)
     endif
   endif
 endif

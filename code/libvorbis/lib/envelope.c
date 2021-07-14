@@ -171,10 +171,10 @@ static int _ve_amp(envelope_lookup *ve,
 
     /* convert amplitude to delta */
     {
-      int p,this=filters[j].ampptr;
+      int p,This=filters[j].ampptr;
       float postmax,postmin,premax=-99999.f,premin=99999.f;
 
-      p=this;
+      p=This;
       p--;
       if(p<0)p+=VE_AMP;
       postmax=max(acc,filters[j].ampbuf[p]);
@@ -191,7 +191,7 @@ static int _ve_amp(envelope_lookup *ve,
       valmax=postmax-premax;
 
       /*filters[j].markers[pos]=valmax;*/
-      filters[j].ampbuf[this]=acc;
+      filters[j].ampbuf[This]=acc;
       filters[j].ampptr++;
       if(filters[j].ampptr>=VE_AMP)filters[j].ampptr=0;
     }

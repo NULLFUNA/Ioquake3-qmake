@@ -35,3 +35,6 @@ build/debug/rungame
 build/debug/runded
 build/debug/rungame
 *.tmp
+build/debug/bin/refload
+build/debug/main/q3history
+build/debug/rungame
