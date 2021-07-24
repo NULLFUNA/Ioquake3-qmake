@@ -216,6 +216,7 @@ using namespace std;
 //=============================================================
 
 typedef unsigned char byte;
+typedef unsigned char q3byte;
 
 typedef int	qboolean;
 #define qtrue	1
@@ -812,7 +813,7 @@ int QDECL Com_sprintf (char *dest, int size, const char *fmt, ...) __attribute__
 char *Com_SkipTokens( char *s, int numTokens, char *sep );
 char *Com_SkipCharset( char *s, char *sep );
 
-void Com_RandomBytes( byte *string, int len );
+void Com_RandomBytes( q3byte *string, int len );
 
 // mode parm for FS_FOpenFile
 typedef enum {
@@ -862,14 +863,14 @@ int Q_CountChar(const char *string, char tocount);
 // implemented as a struct for qvm compatibility
 typedef struct
 {
-	byte	b0;
-	byte	b1;
-	byte	b2;
-	byte	b3;
-	byte	b4;
-	byte	b5;
-	byte	b6;
-	byte	b7;
+	q3byte	b0;
+	q3byte	b1;
+	q3byte	b2;
+	q3byte	b3;
+	q3byte	b4;
+	q3byte	b5;
+	q3byte	b6;
+	q3byte	b7;
 } q3int64;
 
 //=============================================
@@ -1033,9 +1034,9 @@ PlaneTypeForNormal
 typedef struct cplane_s {
 	vec3_t	normal;
 	float	dist;
-	byte	type;			// for fast side tests: 0,1,2 = axial, 3 = nonaxial
-	byte	signbits;		// signx + (signy<<1) + (signz<<2), used as lookup during collision
-	byte	pad[2];
+	q3byte	type;			// for fast side tests: 0,1,2 = axial, 3 = nonaxial
+	q3byte	signbits;		// signx + (signy<<1) + (signz<<2), used as lookup during collision
+	q3byte	pad[2];
 } cplane_t;
 
 
@@ -1272,7 +1273,7 @@ typedef struct usercmd_s {
 	int				serverTime;
 	int				angles[3];
 	int 			buttons;
-	byte			weapon;           // weapon 
+	q3byte			weapon;           // weapon
 	signed char	forwardmove, rightmove, upmove;
 } usercmd_t;
 

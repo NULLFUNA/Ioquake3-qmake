@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #include "g_local.h"
 
 static	float	s_quadFactor;
-static	vec3_t	forward, right, up;
+static	vec3_t	Forward, right, up;
 static	vec3_t	muzzle;
 
 #define NUM_NAILSHOTS 15
@@ -74,11 +74,11 @@ qboolean CheckGauntletAttack( gentity_t *ent ) {
 	int			damage;
 
 	// set aiming directions
-	AngleVectors (ent->client->ps.viewangles, forward, right, up);
+	AngleVectors (ent->client->ps.viewangles, Forward, right, up);
 
-	CalcMuzzlePoint ( ent, forward, right, up, muzzle );
+	CalcMuzzlePoint ( ent, Forward, right, up, muzzle );
 
-	VectorMA (muzzle, 32, forward, end);
+	VectorMA (muzzle, 32, Forward, end);
 
 	trap_Trace (&tr, muzzle, NULL, NULL, end, ent->s.number, MASK_SHOT);
 	if ( tr.surfaceFlags & SURF_NOIMPACT ) {
@@ -116,7 +116,7 @@ qboolean CheckGauntletAttack( gentity_t *ent ) {
 #endif
 
 	damage = 50 * s_quadFactor;
-	G_Damage( traceEnt, ent, ent, forward, tr.endpos,
+	G_Damage( traceEnt, ent, ent, Forward, tr.endpos,
 		damage, 0, MOD_GAUNTLET );
 
 	return qtrue;
@@ -178,7 +178,7 @@ void Bullet_Fire (gentity_t *ent, float spread, int damage, int mod ) {
 	r = random() * M_PI * 2.0f;
 	u = sin(r) * crandom() * spread * 16;
 	r = cos(r) * crandom() * spread * 16;
-	VectorMA (muzzle, 8192*16, forward, end);
+	VectorMA (muzzle, 8192*16, Forward, end);
 	VectorMA (end, r, right, end);
 	VectorMA (end, u, up, end);
 
@@ -211,7 +211,7 @@ void Bullet_Fire (gentity_t *ent, float spread, int damage, int mod ) {
 		if ( traceEnt->takedamage) {
 #ifdef MISSIONPACK
 			if ( traceEnt->client && traceEnt->client->invulnerabilityTime > level.time ) {
-				if (G_InvulnerabilityEffect( traceEnt, forward, tr.endpos, impactpoint, bouncedir )) {
+				if (G_InvulnerabilityEffect( traceEnt, Forward, tr.endpos, impactpoint, bouncedir )) {
 					G_BounceProjectile( muzzle, impactpoint, bouncedir, end );
 					VectorCopy( impactpoint, muzzle );
 					// the player can hit him/herself with the bounced rail
@@ -225,7 +225,7 @@ void Bullet_Fire (gentity_t *ent, float spread, int damage, int mod ) {
 			}
 			else {
 #endif
-				G_Damage( traceEnt, ent, ent, forward, tr.endpos,
+				G_Damage( traceEnt, ent, ent, Forward, tr.endpos,
 					damage, 0, mod);
 #ifdef MISSIONPACK
 			}
@@ -247,7 +247,7 @@ BFG
 void BFG_Fire ( gentity_t *ent ) {
 	gentity_t	*m;
 
-	m = fire_bfg (ent, muzzle, forward);
+	m = fire_bfg (ent, muzzle, Forward);
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
 
@@ -293,7 +293,7 @@ qboolean ShotgunPellet( vec3_t start, vec3_t end, gentity_t *ent ) {
 			damage = DEFAULT_SHOTGUN_DAMAGE * s_quadFactor;
 #ifdef MISSIONPACK
 			if ( traceEnt->client && traceEnt->client->invulnerabilityTime > level.time ) {
-				if (G_InvulnerabilityEffect( traceEnt, forward, tr.endpos, impactpoint, bouncedir )) {
+				if (G_InvulnerabilityEffect( traceEnt, Forward, tr.endpos, impactpoint, bouncedir )) {
 					G_BounceProjectile( tr_start, impactpoint, bouncedir, tr_end );
 					VectorCopy( impactpoint, tr_start );
 					// the player can hit him/herself with the bounced rail
@@ -309,7 +309,7 @@ qboolean ShotgunPellet( vec3_t start, vec3_t end, gentity_t *ent ) {
 			if( LogAccuracyHit( traceEnt, ent ) ) {
 				hitClient = qtrue;
 			}
-			G_Damage( traceEnt, ent, ent, forward, tr.endpos, damage, 0, MOD_SHOTGUN);
+			G_Damage( traceEnt, ent, ent, Forward, tr.endpos, damage, 0, MOD_SHOTGUN);
 			return hitClient;
 		}
 		return qfalse;
@@ -322,20 +322,20 @@ void ShotgunPattern( vec3_t origin, vec3_t origin2, int seed, gentity_t *ent ) {
 	int			i;
 	float		r, u;
 	vec3_t		end;
-	vec3_t		forward, right, up;
+	vec3_t		Forward, right, up;
 	qboolean	hitClient = qfalse;
 
-	// derive the right and up vectors from the forward vector, because
+	// derive the right and up vectors from the Forward vector, because
 	// the client won't have any other information
-	VectorNormalize2( origin2, forward );
-	PerpendicularVector( right, forward );
-	CrossProduct( forward, right, up );
+	VectorNormalize2( origin2, Forward );
+	PerpendicularVector( right, Forward );
+	CrossProduct( Forward, right, up );
 
 	// generate the "random" spread pattern
 	for ( i = 0 ; i < DEFAULT_SHOTGUN_COUNT ; i++ ) {
 		r = Q_crandom( &seed ) * DEFAULT_SHOTGUN_SPREAD * 16;
 		u = Q_crandom( &seed ) * DEFAULT_SHOTGUN_SPREAD * 16;
-		VectorMA( origin, 8192 * 16, forward, end);
+		VectorMA( origin, 8192 * 16, Forward, end);
 		VectorMA (end, r, right, end);
 		VectorMA (end, u, up, end);
 		if( ShotgunPellet( origin, end, ent ) && !hitClient ) {
@@ -351,7 +351,7 @@ void weapon_supershotgun_fire (gentity_t *ent) {
 
 	// send shotgun blast
 	tent = G_TempEntity( muzzle, EV_SHOTGUN );
-	VectorScale( forward, 4096, tent->s.origin2 );
+	VectorScale( Forward, 4096, tent->s.origin2 );
 	SnapVector( tent->s.origin2 );
 	tent->s.eventParm = rand() & 255;		// seed for spread pattern
 	tent->s.otherEntityNum = ent->s.number;
@@ -372,10 +372,10 @@ void weapon_grenadelauncher_fire (gentity_t *ent) {
 	gentity_t	*m;
 
 	// extra vertical velocity
-	forward[2] += 0.2f;
-	VectorNormalize( forward );
+	Forward[2] += 0.2f;
+	VectorNormalize( Forward );
 
-	m = fire_grenade (ent, muzzle, forward);
+	m = fire_grenade (ent, muzzle, Forward);
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
 
@@ -393,7 +393,7 @@ ROCKET
 void Weapon_RocketLauncher_Fire (gentity_t *ent) {
 	gentity_t	*m;
 
-	m = fire_rocket (ent, muzzle, forward);
+	m = fire_rocket (ent, muzzle, Forward);
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
 
@@ -412,7 +412,7 @@ PLASMA GUN
 void Weapon_Plasmagun_Fire (gentity_t *ent) {
 	gentity_t	*m;
 
-	m = fire_plasma (ent, muzzle, forward);
+	m = fire_plasma (ent, muzzle, Forward);
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
 
@@ -451,7 +451,7 @@ void weapon_railgun_fire (gentity_t *ent) {
 
 	damage = 100 * s_quadFactor;
 
-	VectorMA (muzzle, 8192, forward, end);
+	VectorMA (muzzle, 8192, Forward, end);
 
 	// trace only against the solids, so the railgun will go through people
 	unlinked = 0;
@@ -466,7 +466,7 @@ void weapon_railgun_fire (gentity_t *ent) {
 		if ( traceEnt->takedamage ) {
 #ifdef MISSIONPACK
 			if ( traceEnt->client && traceEnt->client->invulnerabilityTime > level.time ) {
-				if ( G_InvulnerabilityEffect( traceEnt, forward, trace.endpos, impactpoint, bouncedir ) ) {
+				if ( G_InvulnerabilityEffect( traceEnt, Forward, trace.endpos, impactpoint, bouncedir ) ) {
 					G_BounceProjectile( muzzle, impactpoint, bouncedir, end );
 					// snap the endpos to integers to save net bandwidth, but nudged towards the line
 					SnapVectorTowards( trace.endpos, muzzle );
@@ -489,13 +489,13 @@ void weapon_railgun_fire (gentity_t *ent) {
 				if( LogAccuracyHit( traceEnt, ent ) ) {
 					hits++;
 				}
-				G_Damage (traceEnt, ent, ent, forward, trace.endpos, damage, 0, MOD_RAILGUN);
+				G_Damage (traceEnt, ent, ent, Forward, trace.endpos, damage, 0, MOD_RAILGUN);
 			}
 #else
 				if( LogAccuracyHit( traceEnt, ent ) ) {
 					hits++;
 				}
-				G_Damage (traceEnt, ent, ent, forward, trace.endpos, damage, 0, MOD_RAILGUN);
+				G_Damage (traceEnt, ent, ent, Forward, trace.endpos, damage, 0, MOD_RAILGUN);
 #endif
 		}
 		if ( trace.contents & CONTENTS_SOLID ) {
@@ -568,7 +568,7 @@ GRAPPLING HOOK
 void Weapon_GrapplingHook_Fire (gentity_t *ent)
 {
 	if (!ent->client->fireHeld && !ent->client->hook)
-		fire_grapple (ent, muzzle, forward);
+		fire_grapple (ent, muzzle, Forward);
 
 	ent->client->fireHeld = qtrue;
 }
@@ -618,7 +618,7 @@ void Weapon_LightningFire( gentity_t *ent ) {
 
 	passent = ent->s.number;
 	for (i = 0; i < 10; i++) {
-		VectorMA( muzzle, LIGHTNING_RANGE, forward, end );
+		VectorMA( muzzle, LIGHTNING_RANGE, Forward, end );
 
 		trap_Trace( &tr, muzzle, NULL, NULL, end, passent, MASK_SHOT );
 
@@ -643,11 +643,11 @@ void Weapon_LightningFire( gentity_t *ent ) {
 		if ( traceEnt->takedamage) {
 #ifdef MISSIONPACK
 			if ( traceEnt->client && traceEnt->client->invulnerabilityTime > level.time ) {
-				if (G_InvulnerabilityEffect( traceEnt, forward, tr.endpos, impactpoint, bouncedir )) {
+				if (G_InvulnerabilityEffect( traceEnt, Forward, tr.endpos, impactpoint, bouncedir )) {
 					G_BounceProjectile( muzzle, impactpoint, bouncedir, end );
 					VectorCopy( impactpoint, muzzle );
-					VectorSubtract( end, impactpoint, forward );
-					VectorNormalize(forward);
+					VectorSubtract( end, impactpoint, Forward );
+					VectorNormalize(Forward);
 					// the player can hit him/herself with the bounced lightning
 					passent = ENTITYNUM_NONE;
 				}
@@ -661,7 +661,7 @@ void Weapon_LightningFire( gentity_t *ent ) {
 			if( LogAccuracyHit( traceEnt, ent ) ) {
 				ent->client->accuracy_hits++;
 			}
-			G_Damage( traceEnt, ent, ent, forward, tr.endpos, damage, 0, MOD_LIGHTNING);
+			G_Damage( traceEnt, ent, ent, Forward, tr.endpos, damage, 0, MOD_LIGHTNING);
 		}
 
 		if ( traceEnt->takedamage && traceEnt->client ) {
@@ -692,7 +692,7 @@ void Weapon_Nailgun_Fire (gentity_t *ent) {
 	int			count;
 
 	for( count = 0; count < NUM_NAILSHOTS; count++ ) {
-		m = fire_nail (ent, muzzle, forward, right, up );
+		m = fire_nail (ent, muzzle, Forward, right, up );
 		m->damage *= s_quadFactor;
 		m->splashDamage *= s_quadFactor;
 	}
@@ -713,10 +713,10 @@ void weapon_proxlauncher_fire (gentity_t *ent) {
 	gentity_t	*m;
 
 	// extra vertical velocity
-	forward[2] += 0.2f;
-	VectorNormalize( forward );
+	Forward[2] += 0.2f;
+	VectorNormalize( Forward );
 
-	m = fire_prox (ent, muzzle, forward);
+	m = fire_prox (ent, muzzle, Forward);
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
 
@@ -769,10 +769,10 @@ CalcMuzzlePoint
 set muzzle location relative to pivoting eye
 ===============
 */
-void CalcMuzzlePoint ( gentity_t *ent, vec3_t forward, vec3_t right, vec3_t up, vec3_t muzzlePoint ) {
+void CalcMuzzlePoint ( gentity_t *ent, vec3_t Forward, vec3_t right, vec3_t up, vec3_t muzzlePoint ) {
 	VectorCopy( ent->s.pos.trBase, muzzlePoint );
 	muzzlePoint[2] += ent->client->ps.viewheight;
-	VectorMA( muzzlePoint, 14, forward, muzzlePoint );
+	VectorMA( muzzlePoint, 14, Forward, muzzlePoint );
 	// snap to integer coordinates for more efficient network bandwidth usage
 	SnapVector( muzzlePoint );
 }
@@ -784,10 +784,10 @@ CalcMuzzlePointOrigin
 set muzzle location relative to pivoting eye
 ===============
 */
-void CalcMuzzlePointOrigin ( gentity_t *ent, vec3_t origin, vec3_t forward, vec3_t right, vec3_t up, vec3_t muzzlePoint ) {
+void CalcMuzzlePointOrigin ( gentity_t *ent, vec3_t origin, vec3_t Forward, vec3_t right, vec3_t up, vec3_t muzzlePoint ) {
 	VectorCopy( ent->s.pos.trBase, muzzlePoint );
 	muzzlePoint[2] += ent->client->ps.viewheight;
-	VectorMA( muzzlePoint, 14, forward, muzzlePoint );
+	VectorMA( muzzlePoint, 14, Forward, muzzlePoint );
 	// snap to integer coordinates for more efficient network bandwidth usage
 	SnapVector( muzzlePoint );
 }
@@ -825,9 +825,9 @@ void FireWeapon( gentity_t *ent ) {
 	}
 
 	// set aiming directions
-	AngleVectors (ent->client->ps.viewangles, forward, right, up);
+	AngleVectors (ent->client->ps.viewangles, Forward, right, up);
 
-	CalcMuzzlePointOrigin ( ent, ent->client->oldOrigin, forward, right, up, muzzle );
+	CalcMuzzlePointOrigin ( ent, ent->client->oldOrigin, Forward, right, up, muzzle );
 
 	// fire the specific weapon
 	switch( ent->s.weapon ) {

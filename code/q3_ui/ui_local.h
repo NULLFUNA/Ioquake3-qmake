@@ -496,7 +496,7 @@ typedef struct {
 	int				muzzleFlashTime;
 
 	vec3_t			color1;
-	byte			c1RGBA[4];
+	q3byte			c1RGBA[4];
 
 	// currently in use drawing parms
 	vec3_t			viewAngles;

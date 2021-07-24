@@ -79,8 +79,8 @@ static qboolean StringToFilter (char *s, ipFilter_t *f)
 {
 	char	num[128];
 	int		i, j;
-	byte	b[4];
-	byte	m[4];
+	q3byte	b[4];
+	q3byte	m[4];
 	
 	for (i=0 ; i<4 ; i++)
 	{
@@ -132,8 +132,8 @@ UpdateIPBans
 */
 static void UpdateIPBans (void)
 {
-	byte	b[4] = {0};
-	byte	m[4] = {0};
+	q3byte	b[4] = {0};
+	q3byte	m[4] = {0};
 	int		i,j;
 	char	iplist_final[MAX_CVAR_VALUE_STRING] = {0};
 	char	ip[64] = {0};
@@ -178,7 +178,7 @@ qboolean G_FilterPacket (char *from)
 {
 	int		i;
 	unsigned	in;
-	byte m[4] = {0};
+	q3byte m[4] = {0};
 	char *p;
 
 	i = 0;
